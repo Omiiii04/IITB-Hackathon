@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eff6ff;
+  --color-primary-500: #3b82f6;
+  --color-primary-900: #1e3a8a;
+
+  --color-success-500: #22c55e;   /* DELIVERED, PAYMENT_SUCCESSFUL */
+  --color-warning-500: #f59e0b;   /* AWAITING_PAYMENT, low stock */
+  --color-danger-500: #ef4444;    /* PAYMENT_FAILED, CANCELLED, out of stock */
+
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #0f172a;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
