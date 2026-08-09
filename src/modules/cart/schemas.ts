@@ -1,1 +1,5 @@
-// Skeleton placeholder for src/modules/cart/schemas.ts
+import { z } from 'zod';
+
+export const genericSchema = z.object({
+  id: z.string().optional(),
+});

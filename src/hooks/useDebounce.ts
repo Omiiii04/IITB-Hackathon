@@ -1,1 +1,5 @@
-// Skeleton placeholder for src/hooks/useDebounce.ts
+'use client';
+
+export function useDebounce() {
+  return {};
+}
