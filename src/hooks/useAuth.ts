@@ -1,1 +1,5 @@
-// Skeleton placeholder for src/hooks/useAuth.ts
+'use client';
+
+export function useAuth() {
+  return {};
+}

@@ -1,1 +1,5 @@
-// Skeleton placeholder for src/hooks/useToast.ts
+'use client';
+
+export function useToast() {
+  return {};
+}

@@ -1,18 +1,9 @@
-import Navbar from "@/components/common/Navbar";
-import Sidebar from "@/components/common/Sidebar";
+import React from 'react';
 
-export default function SellerLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-6">{children}</main>
-      </div>
-    </div>
-  );
+  return <div className="w-full">{children}</div>;
 }

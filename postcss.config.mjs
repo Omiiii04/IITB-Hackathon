@@ -1,1 +1,5 @@
-// Skeleton placeholder for postcss.config.mjs
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+  },
+};

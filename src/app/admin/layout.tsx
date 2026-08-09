@@ -1,1 +1,9 @@
-// Skeleton placeholder for src/app/admin/layout.tsx
+import React from 'react';
+
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="w-full">{children}</div>;
+}

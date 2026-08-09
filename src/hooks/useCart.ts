@@ -1,1 +1,5 @@
-// Skeleton placeholder for src/hooks/useCart.ts
+'use client';
+
+export function useCart() {
+  return {};
+}

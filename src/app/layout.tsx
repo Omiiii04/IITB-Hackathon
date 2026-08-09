@@ -1,9 +1,28 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+});
 
 export const metadata: Metadata = {
-  title: "IITB Hackathon E-Commerce",
-  description: "Multi-vendor marketplace",
+  title: 'MarketHub | Multi-Vendor E-Commerce Platform',
+  description: 'Enterprise-grade multi-vendor e-commerce platform with atomic stock reservations, split sub-orders, and dual payment gateways.',
+  keywords: ['e-commerce', 'multi-vendor', 'marketplace', 'nextjs', 'tailwind', 'prisma', 'stripe', 'razorpay'],
+  authors: [{ name: 'MarketHub Engineering' }],
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#0f172a',
 };
 
 export default function RootLayout({
@@ -12,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-surface-light text-primary-900 font-sans antialiased">
+    <html lang="en" className={`${inter.variable} dark`}>
+      <body className="min-h-screen bg-[#0f172a] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
         {children}
       </body>
     </html>

@@ -1,23 +1,50 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
     container_name: iitb_ecommerce_postgres
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: ecommerce_db
+      POSTGRES_USER: ${POSTGRES_USER:-omii}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-omii0123}
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce_db}
     ports:
-      - '5432:5432'
+      - '${POSTGRES_PORT:-5432}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER:-omii} -d $${POSTGRES_DB:-ecommerce_db}']
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 5s
+    networks:
+      - ecommerce_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iitb_ecommerce_app
+    restart: unless-stopped
+    ports:
+      - '${PORT:-3000}:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-omii}:${POSTGRES_PASSWORD:-omii0123}@postgres:5432/${POSTGRES_DB:-ecommerce_db}?schema=public
+      - DIRECT_URL=postgresql://${POSTGRES_USER:-omii}:${POSTGRES_PASSWORD:-omii0123}@postgres:5432/${POSTGRES_DB:-ecommerce_db}?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommerce_network
+    profiles:
+      - full
 
 volumes:
   postgres_data:
+    driver: local
+
+networks:
+  ecommerce_network:
+    driver: bridge

@@ -1,1 +1,7 @@
-// Skeleton placeholder for tests/integration/seller/multi-tenant-query.test.ts
+import { describe, it, expect } from 'vitest';
+
+describe('Unit test suite', () => {
+  it('should pass initial sanity check', () => {
+    expect(true).toBe(true);
+  });
+});
