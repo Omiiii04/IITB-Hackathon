@@ -28,6 +28,12 @@
   --color-danger-500: #ef4444;
   --color-danger-700: #b91c1c;
 
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+
+
   --color-surface-light: #ffffff;
   --color-surface-dark: #0f172a;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
