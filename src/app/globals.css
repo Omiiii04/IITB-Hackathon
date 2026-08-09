@@ -9,6 +9,12 @@
   --color-warning-500: #f59e0b;   /* AWAITING_PAYMENT, low stock */
   --color-danger-500: #ef4444;    /* PAYMENT_FAILED, CANCELLED, out of stock */
 
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+
+
   --color-surface-light: #ffffff;
   --color-surface-dark: #0f172a;
   --font-sans: 'Inter', system-ui, sans-serif;
