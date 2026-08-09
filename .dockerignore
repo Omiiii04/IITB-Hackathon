@@ -1,0 +1,47 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing & Coverage
+coverage
+playwright-report
+test-results
+tests
+
+# Next.js build output
+.next
+out
+
+# Git
+.git
+.gitignore
+
+# Environment files
+.env*.local
+.env
+
+# Docker & CI
+Dockerfile
+docker-compose*.yml
+.dockerignore
+.github
+
+# Documentation & IDE
+Docs
+.vscode
+.idea
+*.md
+!README.md
+.DS_Store
+Thumbs.db
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
