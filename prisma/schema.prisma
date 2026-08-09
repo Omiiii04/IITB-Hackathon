@@ -62,20 +62,24 @@ enum DiscountType {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  email          String    @unique
-  passwordHash   String?   @map("password_hash") // Nullable for OAuth accounts
-  oauthProvider  String?   @map("oauth_provider")
-  oauthId        String?   @map("oauth_id")
-  role           Role      @default(CUSTOMER)
-  isEmailVerified Boolean  @default(false) @map("is_email_verified")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
+  id              String    @id @default(uuid())
+  email           String    @unique
+  name            String?
+  phone           String?
+  avatarUrl       String?   @map("avatar_url")
+  passwordHash    String?   @map("password_hash") // Nullable for OAuth accounts
+  oauthProvider   String?   @map("oauth_provider")
+  oauthId         String?   @map("oauth_id")
+  role            Role      @default(CUSTOMER)
+  isEmailVerified Boolean   @default(false) @map("is_email_verified")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
-  store          Store?
-  addresses      Address[]
-  orders         Order[]
+  store           Store?
+  addresses       Address[]
+  orders          Order[]
 
+  @@index([role])
   @@map("users")
 }
 
@@ -84,17 +88,23 @@ model Store {
   sellerId       String      @unique @map("seller_id")
   storeName      String      @map("store_name")
   slug           String      @unique
+  description    String?
+  logoUrl        String?     @map("logo_url")
+  bannerUrl      String?     @map("banner_url")
   status         StoreStatus @default(PENDING)
   commissionRate Float       @default(0.10) @map("commission_rate")
   createdAt      DateTime    @default(now()) @map("created_at")
   updatedAt      DateTime    @updatedAt @map("updated_at")
 
-  seller         User        @relation(fields: [sellerId], references: [id])
+  seller         User        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   products       Product[]
   variants       ProductVariant[]
   coupons        Coupon[]
   orderItems     OrderItem[]
 
+  @@index([sellerId])
+  @@index([status])
+  @@index([slug])
   @@map("stores")
 }
 
@@ -103,13 +113,18 @@ model Category {
   parentCategoryId String?    @map("parent_category_id")
   name             String
   slug             String     @unique
+  description      String?
+  imageUrl         String?    @map("image_url")
+  isActive         Boolean    @default(true) @map("is_active")
   createdAt        DateTime   @default(now()) @map("created_at")
   updatedAt        DateTime   @updatedAt @map("updated_at")
 
-  parentCategory   Category?  @relation("CategoryHierarchy", fields: [parentCategoryId], references: [id])
+  parentCategory   Category?  @relation("CategoryHierarchy", fields: [parentCategoryId], references: [id], onDelete: SetNull)
   subCategories    Category[] @relation("CategoryHierarchy")
   products         Product[]
 
+  @@index([parentCategoryId])
+  @@index([slug])
   @@map("categories")
 }
 
