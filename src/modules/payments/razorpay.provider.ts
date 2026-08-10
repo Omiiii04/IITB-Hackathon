@@ -1,7 +1,3 @@
-import { prisma } from '@/lib/prisma';
+// TODO: Implement razorpay.provider
+export {};
 
-export const servicePlaceholder = {
-  async execute() {
-    return { success: true, dbReady: Boolean(prisma) };
-  },
-};

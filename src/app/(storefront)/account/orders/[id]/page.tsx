@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default async function IdPage() {
   return (
     <div className="container mx-auto px-6 py-8">

@@ -1,5 +1,3 @@
-import { z } from 'zod';
+// TODO: Define products validation schemas
+export {};
 
-export const genericSchema = z.object({
-  id: z.string().optional(),
-});

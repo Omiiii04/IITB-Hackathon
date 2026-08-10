@@ -6,5 +6,5 @@ export interface ApiResponse<T = unknown> {
 }
 
 export type Role = 'CUSTOMER' | 'SELLER' | 'DELIVERY' | 'ADMIN';
-export type OrderStatus = 'AWAITING_PAYMENT' | 'PAYMENT_FAILED' | 'PAYMENT_SUCCESSFUL' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED';
+export type OrderStatus = 'AWAITING_PAYMENT' | 'PAYMENT_FAILED' | 'PAYMENT_SUCCESSFUL' | 'PROCESSING' | 'PARTIALLY_FULFILLED' | 'COMPLETED' | 'CANCELLED' | 'REFUNDED';
 export type SubOrderStatus = 'PLACED' | 'SELLER_ACCEPTED' | 'PACKED' | 'SHIPPED' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'CANCELLED';

@@ -9,9 +9,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required').default('postgresql://omii:omii0123@localhost:5432/ecommerce_db?schema=public'),
   DIRECT_URL: z.string().optional(),
 
-  // JWT Secrets
-  JWT_ACCESS_SECRET: z.string().default('default_jwt_access_secret_key_minimum_32_chars!'),
-  JWT_REFRESH_SECRET: z.string().default('default_jwt_refresh_secret_key_minimum_32_chars!'),
+  // JWT Secrets — must be explicitly set; no defaults to prevent accidental weak-key deployments
+  JWT_ACCESS_SECRET: z.string().min(32, 'JWT_ACCESS_SECRET must be at least 32 characters'),
+  JWT_REFRESH_SECRET: z.string().min(32, 'JWT_REFRESH_SECRET must be at least 32 characters'),
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
