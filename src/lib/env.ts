@@ -49,4 +49,37 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
-export const env = envSchema.parse(process.env);
+function getValidatedEnv(): Env {
+  const isBuildPhase =
+    process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build' ||
+    process.env.SKIP_ENV_VALIDATION === '1' ||
+    process.env.SKIP_ENV_VALIDATION === 'true';
+
+  const parseResult = envSchema.safeParse(process.env);
+
+  if (!parseResult.success) {
+    if (isBuildPhase) {
+      // During Next.js page data collection / static route analysis at build time,
+      // fallback to dummy placeholders so docker build doesn't require runtime secrets.
+      return envSchema.parse({
+        ...process.env,
+        DATABASE_URL: process.env.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy',
+        JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || 'build_dummy_access_secret_min_32_chars!',
+        JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'build_dummy_refresh_secret_min_32_chars!',
+      });
+    }
+
+    console.error('❌ Invalid environment variables:', parseResult.error.format());
+    throw new Error('Invalid environment variables');
+  }
+
+  return parseResult.data;
+}
+
+export const env = new Proxy({} as Env, {
+  get(_target, prop: string | symbol) {
+    if (typeof prop !== 'string') return undefined;
+    return getValidatedEnv()[prop as keyof Env];
+  },
+});

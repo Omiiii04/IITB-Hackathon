@@ -16,6 +16,11 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV SKIP_ENV_VALIDATION=1
+ENV DATABASE_URL="postgresql://build_placeholder:build_placeholder@localhost:5432/build_placeholder"
+ENV JWT_ACCESS_SECRET="build_placeholder_jwt_access_secret_minimum_32_chars!"
+ENV JWT_REFRESH_SECRET="build_placeholder_jwt_refresh_secret_minimum_32_chars!"
+ENV NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 RUN npx prisma generate
 RUN npm run build
