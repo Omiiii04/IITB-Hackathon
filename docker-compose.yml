@@ -33,6 +33,8 @@ services:
       - PORT=3000
       - DATABASE_URL=postgresql://${POSTGRES_USER:-omii}:${POSTGRES_PASSWORD:-omii0123}@postgres:5432/${POSTGRES_DB:-ecommerce_db}?schema=public
       - DIRECT_URL=postgresql://${POSTGRES_USER:-omii}:${POSTGRES_PASSWORD:-omii0123}@postgres:5432/${POSTGRES_DB:-ecommerce_db}?schema=public
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-docker_compose_jwt_access_secret_min_32_chars!}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-docker_compose_jwt_refresh_secret_min_32_chars!}
     depends_on:
       postgres:
         condition: service_healthy

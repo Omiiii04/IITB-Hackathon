@@ -5,20 +5,26 @@ const envSchema = z.object({
   PORT: z.string().default('3000'),
   NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
 
-  // PostgreSQL Database
-  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required').default('postgresql://omii:omii0123@localhost:5432/ecommerce_db?schema=public'),
+  // PostgreSQL Database — no default; must be explicitly supplied in every
+  // environment. A missing DATABASE_URL is a misconfiguration we want to
+  // surface immediately at startup, not silently fall back to dev credentials.
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   DIRECT_URL: z.string().optional(),
 
-  // JWT Secrets — must be explicitly set; no defaults to prevent accidental weak-key deployments
+  // JWT Secrets — must be explicitly set; no defaults to prevent accidental
+  // weak-key deployments.
   JWT_ACCESS_SECRET: z.string().min(32, 'JWT_ACCESS_SECRET must be at least 32 characters'),
   JWT_REFRESH_SECRET: z.string().min(32, 'JWT_REFRESH_SECRET must be at least 32 characters'),
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
-  // Google OAuth 2.0
-  GOOGLE_CLIENT_ID: z.string().optional(),
-  GOOGLE_CLIENT_SECRET: z.string().optional(),
-  GOOGLE_CALLBACK_URL: z.string().optional(),
+  // Google OAuth 2.0 — optional at the schema level so the application can
+  // start (and pass CI) without Google credentials. The OAuth route handler
+  // checks for these at runtime and returns a 503 if they are absent, keeping
+  // a clear error instead of a startup crash in non-OAuth environments.
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+  GOOGLE_CALLBACK_URL: z.string().url().optional(),
 
   // Razorpay Gateway
   RAZORPAY_KEY_ID: z.string().optional(),

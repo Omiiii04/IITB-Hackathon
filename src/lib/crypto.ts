@@ -13,16 +13,15 @@ export function generateOtp(length: number = 6): string {
 
 /**
  * Constant-time string comparison to prevent timing attacks.
+ * Uses a double-HMAC pattern to safely compare strings of arbitrary lengths
+ * without leaking length information via early returns.
  */
 export function timingSafeEqual(a: string, b: string): boolean {
-  const bufA = Buffer.from(a, 'utf8');
-  const bufB = Buffer.from(b, 'utf8');
+  const key = crypto.randomBytes(32);
+  const hashA = crypto.createHmac('sha256', key).update(a).digest();
+  const hashB = crypto.createHmac('sha256', key).update(b).digest();
 
-  if (bufA.length !== bufB.length) {
-    return false;
-  }
-
-  return crypto.timingSafeEqual(bufA, bufB);
+  return crypto.timingSafeEqual(hashA, hashB);
 }
 
 /**
