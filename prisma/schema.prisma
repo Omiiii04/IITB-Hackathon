@@ -80,6 +80,7 @@ model User {
   orders          Order[]
 
   @@index([role])
+  @@unique([oauthProvider, oauthId])
   @@map("users")
 }
 

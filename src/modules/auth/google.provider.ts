@@ -30,11 +30,47 @@ const GOOGLE_USERINFO_ENDPOINT = 'https://www.googleapis.com/oauth2/v3/userinfo'
 
 const GOOGLE_SCOPES = ['openid', 'email', 'profile'] as const;
 
+/**
+ * Thrown when the Google OAuth environment variables are not configured.
+ * The route handler catches this and returns a 503 rather than crashing.
+ */
+export class GoogleOAuthNotConfiguredError extends Error {
+  constructor() {
+    super(
+      'Google OAuth is not configured. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_CALLBACK_URL.',
+    );
+    this.name = 'GoogleOAuthNotConfiguredError';
+  }
+}
+
+/**
+ * Returns the Google OAuth credentials from env, or throws
+ * GoogleOAuthNotConfiguredError if any required variable is absent.
+ * Called at the start of each OAuth operation so misconfiguration is caught
+ * at runtime on the first OAuth request, not at application startup.
+ */
+function requireGoogleCredentials(): {
+  clientId: string;
+  clientSecret: string;
+  callbackUrl: string;
+} {
+  if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.GOOGLE_CALLBACK_URL) {
+    throw new GoogleOAuthNotConfiguredError();
+  }
+  return {
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
+    callbackUrl: env.GOOGLE_CALLBACK_URL,
+  };
+}
+
 /** Builds the URL to send the browser to for the Google consent screen. */
 export function buildGoogleAuthUrl(state: string): string {
+  const { clientId, callbackUrl } = requireGoogleCredentials();
+
   const params = new URLSearchParams({
-    client_id: env.GOOGLE_CLIENT_ID,
-    redirect_uri: env.GOOGLE_CALLBACK_URL,
+    client_id: clientId,
+    redirect_uri: callbackUrl,
     response_type: 'code',
     scope: GOOGLE_SCOPES.join(' '),
     access_type: 'online',
@@ -49,14 +85,16 @@ export function buildGoogleAuthUrl(state: string): string {
 
 /** Exchanges the one-time authorization `code` for an access token. */
 export async function exchangeCodeForTokens(code: string): Promise<GoogleTokenResponse> {
+  const { clientId, clientSecret, callbackUrl } = requireGoogleCredentials();
+
   const response = await fetch(GOOGLE_TOKEN_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       code,
-      client_id: env.GOOGLE_CLIENT_ID,
-      client_secret: env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: env.GOOGLE_CALLBACK_URL,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: callbackUrl,
       grant_type: 'authorization_code',
     }),
   });

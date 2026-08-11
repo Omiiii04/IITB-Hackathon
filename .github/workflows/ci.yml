@@ -34,6 +34,14 @@ jobs:
       JWT_ACCESS_SECRET: "ci_test_jwt_access_secret_key_minimum_32_chars!"
       JWT_REFRESH_SECRET: "ci_test_jwt_refresh_secret_key_minimum_32_chars!"
 
+      # Google OAuth — non-functional CI placeholders. Variables are optional
+      # at the schema level; the OAuth route returns 503 when they are absent.
+      # These values are intentionally fake and committed only for CI build.
+      GOOGLE_CLIENT_ID: "ci-placeholder.apps.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "ci-placeholder-secret"
+      GOOGLE_CALLBACK_URL: "http://localhost:3000/api/auth/oauth/google"
+
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

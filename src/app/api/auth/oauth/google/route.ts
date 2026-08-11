@@ -23,12 +23,17 @@ import {
   buildGoogleAuthUrl,
   exchangeCodeForTokens,
   fetchGoogleProfile,
+  GoogleOAuthNotConfiguredError,
 } from '@/modules/auth/google.provider';
 import { findOrCreateGoogleUser } from '@/modules/auth/auth.service';
 import { signRefreshToken, REFRESH_COOKIE_NAME, refreshCookieOptions } from '@/modules/auth/jwt';
+import type { ApiResponse } from '@/types';
 
 const STATE_COOKIE_NAME = 'google_oauth_state';
 const STATE_COOKIE_MAX_AGE_SECONDS = 300; // 5 min — long enough for the round trip
+
+// Path used for the state cookie so it is only sent back on this exact route.
+const STATE_COOKIE_PATH = '/api/auth/oauth/google';
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
@@ -42,18 +47,31 @@ export async function GET(request: NextRequest) {
   // Leg 1: no code yet — kick off the redirect to Google, stashing a random
   // state value in a short-lived, httpOnly cookie to verify on the way back.
   if (!code) {
-    const state = crypto.randomUUID();
-    const response = NextResponse.redirect(buildGoogleAuthUrl(state));
+    let authUrl: string;
+    try {
+      const state = crypto.randomUUID();
+      authUrl = buildGoogleAuthUrl(state);
+      const response = NextResponse.redirect(authUrl);
 
-    response.cookies.set(STATE_COOKIE_NAME, state, {
-      httpOnly: true,
-      secure: env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/api/auth/oauth/google',
-      maxAge: STATE_COOKIE_MAX_AGE_SECONDS,
-    });
+      response.cookies.set(STATE_COOKIE_NAME, state, {
+        httpOnly: true,
+        secure: env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: STATE_COOKIE_PATH,
+        maxAge: STATE_COOKIE_MAX_AGE_SECONDS,
+      });
 
-    return response;
+      return response;
+    } catch (err) {
+      if (err instanceof GoogleOAuthNotConfiguredError) {
+        logger.error('Google OAuth is not configured — missing environment variables');
+        return NextResponse.json<ApiResponse>(
+          { success: false, error: 'Google sign-in is not available in this environment' },
+          { status: 503 },
+        );
+      }
+      throw err;
+    }
   }
 
   // Leg 2: Google redirected back with a code — verify state, exchange,
@@ -78,12 +96,28 @@ export async function GET(request: NextRequest) {
     const refreshToken = signRefreshToken(user.id);
     const response = NextResponse.redirect(new URL('/', env.NEXT_PUBLIC_APP_URL));
     response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, refreshCookieOptions());
-    response.cookies.delete(STATE_COOKIE_NAME);
+    // Delete state cookie using the same path it was set on, so browsers
+    // that scope cookies by path correctly remove it.
+    response.cookies.set(STATE_COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: STATE_COOKIE_PATH,
+      maxAge: 0,
+    });
     return response;
   } catch (err) {
     logger.error('Google OAuth callback failed', { err });
-    const response = NextResponse.redirect(new URL('/login?error=oauth_failed', env.NEXT_PUBLIC_APP_URL));
-    response.cookies.delete(STATE_COOKIE_NAME);
+    const response = NextResponse.redirect(
+      new URL('/login?error=oauth_failed', env.NEXT_PUBLIC_APP_URL),
+    );
+    response.cookies.set(STATE_COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: STATE_COOKIE_PATH,
+      maxAge: 0,
+    });
     return response;
   }
 }
