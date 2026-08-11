@@ -8,14 +8,13 @@
 //   - No `code` query param  -> redirect the browser to Google's consent
 //                                screen (with a CSRF state cookie)
 //   - `code` present         -> validate state, exchange the code, fetch the
-//                                profile, and create/link the platform User
-//
-// Session issuance (setting the platform's own access/refresh tokens) is
-// intentionally NOT done here yet — that's
-// `feat(auth): HTTP-only refresh cookie + in-memory access token flow`,
-// a separate commit that also covers the email/password login path. For now
-// this proves out account creation/linking and redirects back to the login
-// page with a status flag.
+//                                profile, create/link the platform User, and
+//                                set the same refresh cookie the
+//                                email/password login route sets (FR-1.4).
+//                                The client's AuthProvider picks up the
+//                                access token on its next mount-time
+//                                POST /api/auth/refresh — no token is ever
+//                                put in the redirect URL.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/lib/env';
@@ -26,6 +25,7 @@ import {
   fetchGoogleProfile,
 } from '@/modules/auth/google.provider';
 import { findOrCreateGoogleUser } from '@/modules/auth/auth.service';
+import { signRefreshToken, REFRESH_COOKIE_NAME, refreshCookieOptions } from '@/modules/auth/jwt';
 
 const STATE_COOKIE_NAME = 'google_oauth_state';
 const STATE_COOKIE_MAX_AGE_SECONDS = 300; // 5 min — long enough for the round trip
@@ -75,10 +75,9 @@ export async function GET(request: NextRequest) {
 
     logger.info('Google OAuth sign-in succeeded', { userId: user.id });
 
-    // TODO(next commit — HTTP-only refresh cookie + in-memory access token
-    // flow): issue the platform's own access/refresh tokens here instead of
-    // just redirecting, so this converges with the email/password login path.
-    const response = NextResponse.redirect(new URL('/login?oauth=linked', env.NEXT_PUBLIC_APP_URL));
+    const refreshToken = signRefreshToken(user.id);
+    const response = NextResponse.redirect(new URL('/', env.NEXT_PUBLIC_APP_URL));
+    response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, refreshCookieOptions());
     response.cookies.delete(STATE_COOKIE_NAME);
     return response;
   } catch (err) {
