@@ -36,7 +36,7 @@ import {
 import type { GoogleProfile } from '@/modules/auth/schemas';
 
 // Vitest's mock returns Prisma methods as vi.fn(). Cast for easier typing.
-const mockUser = prisma.user as {
+const mockUser = prisma.user as unknown as {
   findUnique: ReturnType<typeof vi.fn>;
   create: ReturnType<typeof vi.fn>;
   update: ReturnType<typeof vi.fn>;

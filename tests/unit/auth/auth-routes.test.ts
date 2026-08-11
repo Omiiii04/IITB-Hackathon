@@ -40,8 +40,8 @@ import { POST as loginRoute } from '@/app/api/auth/login/route';
 import { POST as refreshRoute } from '@/app/api/auth/refresh/route';
 import { REFRESH_COOKIE_NAME, signRefreshToken } from '@/modules/auth/jwt';
 
-const mockRegisterUser = registerUser as ReturnType<typeof vi.fn>;
-const mockUserDb = prisma.user as { findUnique: ReturnType<typeof vi.fn> };
+const mockRegisterUser = registerUser as unknown as ReturnType<typeof vi.fn>;
+const mockUserDb = prisma.user as unknown as { findUnique: ReturnType<typeof vi.fn> };
 
 function makeRequest(body: unknown, cookies: Record<string, string> = {}): NextRequest {
   const cookieHeader = Object.entries(cookies)
