@@ -1,7 +1,65 @@
+import argon2 from 'argon2';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
-import type { GoogleProfile } from '@/modules/auth/schemas';
+import type { GoogleProfile, RegisterInput } from '@/modules/auth/schemas';
 import type { AuthUser, Role } from '@/types';
+
+// FR-1.2: passwords hashed with Argon2id prior to persistence. OWASP's
+// baseline cost params (m=19MiB, t=2, p=1) — tune upward if server memory
+// allows; hashing cost is a one-time cost per register/login, not a hot path.
+const ARGON2_OPTIONS = {
+  type: argon2.argon2id,
+  memoryCost: 19456,
+  timeCost: 2,
+  parallelism: 1,
+} satisfies argon2.Options & { raw?: false };
+
+export async function hashPassword(plainPassword: string): Promise<string> {
+  return argon2.hash(plainPassword, ARGON2_OPTIONS);
+}
+
+// Never throws on a malformed/foreign hash — returns false so callers can
+// treat "verify failed" and "verify errored" identically without leaking
+// which case occurred.
+export async function verifyPassword(hash: string, plainPassword: string): Promise<boolean> {
+  try {
+    return await argon2.verify(hash, plainPassword);
+  } catch {
+    return false;
+  }
+}
+
+export class EmailAlreadyExistsError extends Error {
+  constructor(email: string) {
+    super(`An account with email "${email}" already exists`);
+    this.name = 'EmailAlreadyExistsError';
+  }
+}
+
+// FR-1.1 / FR-1.2: native email/password registration.
+// Throws EmailAlreadyExistsError on collision — deliberately doesn't reveal
+// whether the existing account is password-based or OAuth-only (FR-1.5),
+// so the route handler can return one generic message either way.
+export async function registerUser(input: RegisterInput): Promise<AuthUser> {
+  const existing = await prisma.user.findUnique({ where: { email: input.email } });
+  if (existing) {
+    throw new EmailAlreadyExistsError(input.email);
+  }
+
+  const passwordHash = await hashPassword(input.password);
+
+  const created = await prisma.user.create({
+    data: {
+      email: input.email,
+      name: input.name,
+      passwordHash,
+      role: input.role,
+    },
+  });
+
+  logger.info('Registered new email/password account', { userId: created.id, role: created.role });
+  return toAuthUser(created);
+}
 
 // Create-or-link the platform User row for a verified Google identity
 // (FR-1.1). Called from the OAuth callback in
