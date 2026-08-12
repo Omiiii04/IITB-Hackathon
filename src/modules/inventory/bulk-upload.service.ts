@@ -1,4 +1,4 @@
-import Papa from 'papaparse';
+import * as Papa from 'papaparse';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getOwnStoreId } from '@/modules/auth/rbac';
@@ -52,7 +52,7 @@ export function parseBulkUploadCsv(rawCsv: string): Record<string, string>[] {
   const parsed = Papa.parse<Record<string, string>>(rawCsv, {
     header: true,
     skipEmptyLines: true,
-    transformHeader: (header) => header.trim(),
+    transformHeader: (header: string) => header.trim(),
   });
 
   if (!parsed.data.length) {
