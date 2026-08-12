@@ -55,7 +55,7 @@ describe('JWT — signAccessToken / verifyAccessToken', () => {
   it('verifyAccessToken rejects a refresh token (different secret — invalid signature)', () => {
     // Refresh tokens are signed with JWT_REFRESH_SECRET; access token verifier
     // uses JWT_ACCESS_SECRET. Cross-secret use must always throw.
-    const refreshToken = signRefreshToken(userId);
+    const refreshToken = signRefreshToken(userId, 'session-id');
     expect(() => verifyAccessToken(refreshToken)).toThrow();
   });
 
@@ -68,13 +68,13 @@ describe('JWT — signRefreshToken / verifyRefreshToken', () => {
   const userId = 'user-uuid-5678';
 
   it('signRefreshToken returns a non-empty string', () => {
-    const token = signRefreshToken(userId);
+    const token = signRefreshToken(userId, 'session-id');
     expect(typeof token).toBe('string');
     expect(token.length).toBeGreaterThan(0);
   });
 
   it('verifyRefreshToken decodes the correct sub', () => {
-    const token = signRefreshToken(userId);
+    const token = signRefreshToken(userId, 'session-id');
     const payload = verifyRefreshToken(token);
 
     expect(payload.sub).toBe(userId);
@@ -98,7 +98,7 @@ describe('JWT — signRefreshToken / verifyRefreshToken', () => {
 
   it('access and refresh tokens signed with the same userId are distinct strings', () => {
     const access = signAccessToken(userId, 'CUSTOMER');
-    const refresh = signRefreshToken(userId);
+    const refresh = signRefreshToken(userId, 'session-id');
     // Different secrets + different payloads — must never be the same token.
     expect(access).not.toBe(refresh);
   });

@@ -257,7 +257,7 @@ describe('POST /api/auth/refresh', () => {
   });
 
   it('returns 401 when the user referenced by the token no longer exists', async () => {
-    const token = signRefreshToken('deleted-user-id');
+    const token = signRefreshToken('deleted-user-id', 'mock-session-id');
     mockUserDb.findUnique.mockResolvedValueOnce(null);
 
     const res = await refreshRoute(makeRequest({}, { [REFRESH_COOKIE_NAME]: token }));
@@ -268,7 +268,7 @@ describe('POST /api/auth/refresh', () => {
   });
 
   it('returns 200 with a new accessToken for a valid refresh token', async () => {
-    const token = signRefreshToken(fakeUser.id);
+    const token = signRefreshToken(fakeUser.id, 'mock-session-id');
     mockUserDb.findUnique.mockResolvedValueOnce(fakeUser);
 
     const res = await refreshRoute(makeRequest({}, { [REFRESH_COOKIE_NAME]: token }));
@@ -282,7 +282,7 @@ describe('POST /api/auth/refresh', () => {
   });
 
   it('rotates the refresh token on each valid use (Set-Cookie is re-issued)', async () => {
-    const token = signRefreshToken(fakeUser.id);
+    const token = signRefreshToken(fakeUser.id, 'mock-session-id');
     mockUserDb.findUnique.mockResolvedValueOnce(fakeUser);
 
     const res = await refreshRoute(makeRequest({}, { [REFRESH_COOKIE_NAME]: token }));
