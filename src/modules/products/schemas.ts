@@ -1,26 +1,42 @@
 import { z } from 'zod';
 
-// ─── GET /api/products — query-string params ─────────────────────────────────
-// All fields are optional; defaults handle the first page with a sensible limit.
 export const listProductsQuerySchema = z.object({
-  /** Filter by category id */
   categoryId: z.string().uuid().optional(),
-  /** Filter by store id */
   storeId: z.string().uuid().optional(),
-  /** Full-text search on title / brand */
   q: z.string().trim().max(200).optional(),
-  /** Minimum base price */
   minPrice: z.coerce.number().min(0).optional(),
-  /** Maximum base price */
   maxPrice: z.coerce.number().min(0).optional(),
-  /** Sort field */
   sortBy: z.enum(['createdAt', 'basePrice', 'title']).default('createdAt'),
-  /** Sort direction */
   order: z.enum(['asc', 'desc']).default('desc'),
-  /** 1-based page number */
   page: z.coerce.number().int().min(1).default(1),
-  /** Items per page — capped at 100 */
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
 export type ListProductsQuery = z.infer<typeof listProductsQuerySchema>;
+
+export const createProductSchema = z.object({
+  categoryId: z.string().uuid(),
+  title: z.string().trim().min(3).max(200),
+  description: z.string().trim().min(10),
+  brand: z.string().trim().max(100).optional(),
+  images: z.array(z.string().url()).optional(),
+  basePrice: z.number().positive(),
+});
+
+export const updateProductSchema = createProductSchema.partial();
+
+export const variantSchema = z.object({
+  sku: z.string().trim().min(1).max(64),
+  title: z.string().trim().max(100).optional(),
+  variantPrice: z.number().positive(),
+  stock: z.number().int().min(0),
+  attributes: z.record(z.string(), z.string()),
+  imageUrl: z.string().url().optional(),
+});
+
+export const updateVariantSchema = variantSchema.partial();
+
+export type CreateProductInput = z.infer<typeof createProductSchema>;
+export type UpdateProductInput = z.infer<typeof updateProductSchema>;
+export type VariantInput = z.infer<typeof variantSchema>;
+export type UpdateVariantInput = z.infer<typeof updateVariantSchema>;
