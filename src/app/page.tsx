@@ -21,7 +21,7 @@ export default function HomePage() {
     { name: 'Tailwind CSS v4', desc: '@theme CSS Variables', color: 'border-sky-500/30 bg-sky-500/10 text-sky-400' },
     { name: 'TypeScript Strict', desc: 'Zero Any Policy', color: 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400' },
     { name: 'Prisma 6', desc: 'PostgreSQL ORM', color: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' },
-    { name: 'Dual Payments', desc: 'Razorpay & Stripe Webhooks', color: 'border-amber-500/30 bg-amber-500/10 text-amber-400' },
+    { name: 'Razorpay', desc: 'HMAC Webhook Verified', color: 'border-amber-500/30 bg-amber-500/10 text-amber-400' },
   ];
 
   const portals = [
@@ -86,7 +86,7 @@ export default function HomePage() {
     {
       icon: Cpu,
       title: 'Dual-Provider Webhook Engine',
-      desc: 'Provider-specific signature verification for Razorpay (HMAC-SHA256 timingSafeEqual) and Stripe (constructEvent) with idempotency keys.',
+      desc: 'Razorpay HMAC-SHA256 timingSafeEqual signature verification on every webhook event, with idempotency keys to prevent double-processing.',
     },
   ];
 

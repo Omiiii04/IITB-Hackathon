@@ -1,2 +1,46 @@
 {
+  "entity": "event",
+  "account_id": "acc_TEST123",
+  "event": "payment.captured",
+  "contains": ["payment"],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_TEST0001",
+        "entity": "payment",
+        "amount": 49900,
+        "currency": "INR",
+        "status": "captured",
+        "order_id": "order_TEST001",
+        "invoice_id": null,
+        "international": false,
+        "method": "upi",
+        "amount_refunded": 0,
+        "refund_status": null,
+        "captured": true,
+        "description": "Payment for order #ORD-TEST001",
+        "card_id": null,
+        "bank": null,
+        "wallet": null,
+        "vpa": "test@upi",
+        "email": "customer@example.com",
+        "contact": "+919999999999",
+        "notes": {
+          "order_id": "order-internal-001"
+        },
+        "fee": 590,
+        "tax": 90,
+        "error_code": null,
+        "error_description": null,
+        "error_source": null,
+        "error_step": null,
+        "error_reason": null,
+        "acquirer_data": {
+          "rrn": "123456789012"
+        },
+        "created_at": 1753996800
+      }
+    }
+  },
+  "created_at": 1753996801
 }

@@ -11,8 +11,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'MarketHub | Multi-Vendor E-Commerce Platform',
-  description: 'Enterprise-grade multi-vendor e-commerce platform with atomic stock reservations, split sub-orders, and dual payment gateways.',
-  keywords: ['e-commerce', 'multi-vendor', 'marketplace', 'nextjs', 'tailwind', 'prisma', 'stripe', 'razorpay'],
+  description: 'Enterprise-grade multi-vendor e-commerce platform with atomic stock reservations, split sub-orders, and Razorpay payment integration.',
+  keywords: ['e-commerce', 'multi-vendor', 'marketplace', 'nextjs', 'tailwind', 'prisma', 'razorpay'],
   authors: [{ name: 'MarketHub Engineering' }],
   icons: {
     icon: '/favicon.ico',

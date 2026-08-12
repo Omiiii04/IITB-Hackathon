@@ -39,7 +39,7 @@ export async function GET() {
       features: {
         atomicStockReservation: true,
         multiTenantIsolation: true,
-        dualWebhooks: ['razorpay', 'stripe'],
+        razorpayWebhook: true,
         otpDeliveryHandshake: true,
         tailwindVersion: 'v4',
         typeScriptStrict: true,
