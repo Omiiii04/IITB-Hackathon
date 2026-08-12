@@ -1,118 +1,53 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import type { BulkUploadSummary } from '@/components/seller/BulkUploadDropzone';
 
-export interface BulkUploadRowResult {
-  row: number;
-  sku?: string;
-  action?: 'created' | 'updated';
-  success: boolean;
-  error?: string;
-}
-
-export interface BulkUploadSummary {
-  total: number;
-  succeeded: number;
-  failed: number;
-  results: BulkUploadRowResult[];
-}
-
-export interface BulkUploadDropzoneProps {
-  productId: string;
-  onComplete: (summary: BulkUploadSummary) => void;
+export interface BulkUploadResultTableProps {
+  summary: BulkUploadSummary;
   className?: string;
 }
 
-export function BulkUploadDropzone({ productId, onComplete, className }: BulkUploadDropzoneProps) {
-  const { token } = useAuth();
-  const [isDragging, setIsDragging] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const uploadFile = useCallback(
-    async (file: File) => {
-      if (!file.name.toLowerCase().endsWith('.csv')) {
-        setError('Please upload a .csv file');
-        return;
-      }
-
-      setIsUploading(true);
-      setError(null);
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('productId', productId);
-
-      try {
-        const res = await fetch('/api/seller/inventory/bulk-upload', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-
-        const json = await res.json();
-
-        if (!res.ok || !json.success) {
-          setError(json.error ?? 'Upload failed');
-          return;
-        }
-
-        onComplete(json.data as BulkUploadSummary);
-      } catch {
-        setError('Network error — please try again');
-      } finally {
-        setIsUploading(false);
-      }
-    },
-    [productId, token, onComplete],
-  );
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) uploadFile(file);
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) uploadFile(file);
-    e.target.value = '';
-  };
+export function BulkUploadResultTable({ summary, className }: BulkUploadResultTableProps) {
+  const { total, succeeded, failed, results } = summary;
 
   return (
     <div className={className}>
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragging(true);
-        }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={handleDrop}
-        className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
-          isDragging
-            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-            : 'border-slate-300 dark:border-slate-700'
-        }`}
-      >
-        {isUploading ? (
-          <p className="text-sm text-slate-500">Uploading…</p>
-        ) : (
-          <>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              Drag and drop a CSV file here, or
-            </p>
-            <label className="mt-2 cursor-pointer text-sm font-medium text-primary-500 hover:text-primary-900">
-              browse files
-              <input type="file" accept=".csv" className="hidden" onChange={handleFileSelect} />
-            </label>
-          </>
-        )}
+      <div className="mb-3 flex gap-4 text-sm">
+        <span className="text-slate-600 dark:text-slate-400">{total} rows processed</span>
+        <span className="text-success-500">{succeeded} succeeded</span>
+        {failed > 0 && <span className="text-danger-500">{failed} failed</span>}
       </div>
-      {error && <p className="mt-2 text-sm text-danger-500">{error}</p>}
+
+      <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-slate-50 dark:bg-slate-800">
+            <tr>
+              <th className="px-3 py-2 font-medium">Row</th>
+              <th className="px-3 py-2 font-medium">SKU</th>
+              <th className="px-3 py-2 font-medium">Status</th>
+              <th className="px-3 py-2 font-medium">Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((r) => (
+              <tr key={r.row} className="border-t border-slate-200 dark:border-slate-700">
+                <td className="px-3 py-2">{r.row}</td>
+                <td className="px-3 py-2">{r.sku ?? '—'}</td>
+                <td className="px-3 py-2">
+                  {r.success ? (
+                    <span className="text-success-500">{r.action === 'updated' ? 'Updated' : 'Created'}</span>
+                  ) : (
+                    <span className="text-danger-500">Failed</span>
+                  )}
+                </td>
+                <td className="px-3 py-2 text-slate-500">{r.error ?? '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
-export default BulkUploadDropzone;
+export default BulkUploadResultTable;

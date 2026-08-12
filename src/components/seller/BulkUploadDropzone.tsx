@@ -25,7 +25,7 @@ export interface BulkUploadDropzoneProps {
 }
 
 export function BulkUploadDropzone({ productId, onComplete, className }: BulkUploadDropzoneProps) {
-  const { token } = useAuth();
+  const { fetchWithAuth } = useAuth();
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,19 +45,15 @@ export function BulkUploadDropzone({ productId, onComplete, className }: BulkUpl
       formData.append('productId', productId);
 
       try {
-        const res = await fetch('/api/seller/inventory/bulk-upload', {
+        const res = await fetchWithAuth('/api/seller/inventory/bulk-upload', {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
           body: formData,
         });
-
         const json = await res.json();
-
         if (!res.ok || !json.success) {
           setError(json.error ?? 'Upload failed');
           return;
         }
-
         onComplete(json.data as BulkUploadSummary);
       } catch {
         setError('Network error — please try again');
@@ -65,7 +61,7 @@ export function BulkUploadDropzone({ productId, onComplete, className }: BulkUpl
         setIsUploading(false);
       }
     },
-    [productId, token, onComplete],
+    [productId, fetchWithAuth, onComplete],
   );
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
