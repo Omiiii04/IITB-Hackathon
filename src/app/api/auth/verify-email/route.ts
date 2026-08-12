@@ -1,9 +1,9 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
 import { env } from '@/lib/env';
+import { rateLimit } from '@/lib/rate-limit';
 import {
   signEmailVerificationToken,
   verifyEmailVerificationToken,
@@ -20,6 +20,11 @@ const GENERIC_SUCCESS: ApiResponse = {
 };
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  if (!rateLimit(ip, 5, 60 * 1000)) { // 5 requests per minute
+    return NextResponse.json<ApiResponse>({ success: false, error: 'Too many requests, please try again later' }, { status: 429 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();

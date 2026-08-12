@@ -26,7 +26,8 @@ import {
   GoogleOAuthNotConfiguredError,
 } from '@/modules/auth/google.provider';
 import { findOrCreateGoogleUser } from '@/modules/auth/auth.service';
-import { signRefreshToken, REFRESH_COOKIE_NAME, refreshCookieOptions } from '@/modules/auth/jwt';
+import { prisma } from '@/lib/prisma';
+import { signRefreshToken, REFRESH_COOKIE_NAME, refreshCookieOptions, getRefreshTokenExpiry } from '@/modules/auth/jwt';
 import type { ApiResponse } from '@/types';
 
 const STATE_COOKIE_NAME = 'google_oauth_state';
@@ -93,7 +94,14 @@ export async function GET(request: NextRequest) {
 
     logger.info('Google OAuth sign-in succeeded', { userId: user.id });
 
-    const refreshToken = signRefreshToken(user.id);
+    const session = await prisma.session.create({
+      data: {
+        userId: user.id,
+        expiresAt: getRefreshTokenExpiry(),
+      },
+    });
+
+    const refreshToken = signRefreshToken(user.id, session.id);
     const response = NextResponse.redirect(new URL('/', env.NEXT_PUBLIC_APP_URL));
     response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, refreshCookieOptions());
     // Delete state cookie using the same path it was set on, so browsers

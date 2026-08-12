@@ -16,6 +16,7 @@ export interface AccessTokenPayload {
 
 export interface RefreshTokenPayload {
   sub: string;
+  jti: string;
   type: 'refresh';
 }
 
@@ -26,8 +27,8 @@ export function signAccessToken(userId: string, role: Role): string {
   } as jwt.SignOptions);
 }
 
-export function signRefreshToken(userId: string): string {
-  const payload: RefreshTokenPayload = { sub: userId, type: 'refresh' };
+export function signRefreshToken(userId: string, sessionId: string): string {
+  const payload: RefreshTokenPayload = { sub: userId, jti: sessionId, type: 'refresh' };
   return jwt.sign(payload, env.JWT_REFRESH_SECRET, {
     expiresIn: env.JWT_REFRESH_EXPIRES_IN,
   } as jwt.SignOptions);
@@ -66,6 +67,11 @@ export function refreshCookieOptions() {
     path: '/',
     maxAge: parseExpiryToSeconds(env.JWT_REFRESH_EXPIRES_IN),
   };
+}
+
+export function getRefreshTokenExpiry(): Date {
+  const seconds = parseExpiryToSeconds(env.JWT_REFRESH_EXPIRES_IN);
+  return new Date(Date.now() + seconds * 1000);
 }
 
 // Converts jsonwebtoken-style durations ("7d", "15m", "3600") to seconds for

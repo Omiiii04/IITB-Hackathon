@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
+import { rateLimit } from '@/lib/rate-limit';
 import { loginSchema } from '@/modules/auth/schemas';
 import { verifyPassword } from '@/modules/auth/auth.service';
 import {
@@ -12,10 +13,16 @@ import {
   signRefreshToken,
   REFRESH_COOKIE_NAME,
   refreshCookieOptions,
+  getRefreshTokenExpiry,
 } from '@/modules/auth/jwt';
 import type { ApiResponse, AuthUser } from '@/types';
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  if (!rateLimit(ip, 10, 60 * 1000)) { // 10 requests per minute
+    return NextResponse.json<ApiResponse>({ success: false, error: 'Too many requests, please try again later' }, { status: 429 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -48,7 +55,15 @@ export async function POST(request: NextRequest) {
 
   const authUser: AuthUser = { id: user.id, email: user.email, role: user.role };
   const accessToken = signAccessToken(user.id, user.role);
-  const refreshToken = signRefreshToken(user.id);
+
+  const session = await prisma.session.create({
+    data: {
+      userId: user.id,
+      expiresAt: getRefreshTokenExpiry(),
+    },
+  });
+
+  const refreshToken = signRefreshToken(user.id, session.id);
 
   logger.info('User logged in', { userId: user.id });
 

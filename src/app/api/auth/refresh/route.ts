@@ -15,6 +15,7 @@ import {
   signRefreshToken,
   REFRESH_COOKIE_NAME,
   refreshCookieOptions,
+  getRefreshTokenExpiry,
 } from '@/modules/auth/jwt';
 import type { ApiResponse, AuthUser } from '@/types';
 
@@ -41,9 +42,27 @@ export async function POST(request: NextRequest) {
     return response;
   }
 
+  const existingSession = await prisma.session.findUnique({ where: { id: payload.jti } });
+  if (!existingSession) {
+    const response = NextResponse.json<ApiResponse>({ success: false, error: 'Session expired' }, { status: 401 });
+    response.cookies.delete(REFRESH_COOKIE_NAME);
+    return response;
+  }
+
+  // Delete the old session (revocation)
+  await prisma.session.delete({ where: { id: payload.jti } });
+
+  // Create a new session for the rotated token
+  const newSession = await prisma.session.create({
+    data: {
+      userId: user.id,
+      expiresAt: getRefreshTokenExpiry(),
+    },
+  });
+
   const authUser: AuthUser = { id: user.id, email: user.email, role: user.role };
   const accessToken = signAccessToken(user.id, user.role);
-  const rotatedRefreshToken = signRefreshToken(user.id);
+  const rotatedRefreshToken = signRefreshToken(user.id, newSession.id);
 
   const response = NextResponse.json<ApiResponse<{ accessToken: string; user: AuthUser }>>({
     success: true,

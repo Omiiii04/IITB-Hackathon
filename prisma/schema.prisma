@@ -78,6 +78,7 @@ model User {
   store           Store?
   addresses       Address[]
   orders          Order[]
+  sessions        Session[]
 
   @@index([role])
   @@unique([oauthProvider, oauthId])
@@ -314,4 +315,16 @@ model ProcessedEvent {
   @@unique([provider, eventId])
   @@index([provider, eventId])
   @@map("processed_events")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
 }
