@@ -25,7 +25,11 @@ export function isAuthError(result: AuthResult): result is { error: NextResponse
 // Reads Authorization: Bearer <access token> and verifies it. Deliberately
 export function requireAuth(request: NextRequest): AuthResult {
   const header = request.headers.get('authorization');
-  const token = header?.startsWith('Bearer ') ? header.slice('Bearer '.length) : null;
+  let token = header?.startsWith('Bearer ') ? header.slice('Bearer '.length) : null;
+
+  if (!token) {
+    token = request.cookies.get('accessToken')?.value ?? request.cookies.get('token')?.value ?? null;
+  }
 
   if (!token) {
     return {
