@@ -22,9 +22,7 @@ export const metadata = {
   description: 'Browse thousands of products from verified sellers on MarketHub.',
 };
 
-function formatPrice(n: number) {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(n);
-}
+
 
 export default async function ProductsPage({ searchParams }: PageProps) {
   const sp = await searchParams;

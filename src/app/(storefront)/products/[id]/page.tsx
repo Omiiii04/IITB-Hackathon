@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProductById, getProductBySlug } from '@/modules/products/products.service';
-import { ShoppingCart, Store, Tag, Package, ChevronRight, Star } from 'lucide-react';
+import { ShoppingCart, Store, Tag, Package, ChevronRight } from 'lucide-react';
 import { ProductCard } from '@/components/storefront/ProductCard';
 import { listProducts } from '@/modules/products/products.service';
 

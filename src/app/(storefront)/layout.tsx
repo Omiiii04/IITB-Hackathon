@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Search, Menu, Zap } from 'lucide-react';
+import { ShoppingBag, Search, Zap } from 'lucide-react';
 import { StorefrontNav } from '@/components/storefront/StorefrontNav';
 
 export default function StorefrontLayout({

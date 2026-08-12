@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, Star, Package } from 'lucide-react';
+import { ShoppingCart, Package } from 'lucide-react';
 
 export interface ProductCardData {
   id: string;

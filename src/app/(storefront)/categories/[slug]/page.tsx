@@ -2,7 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { listCategories, getCategoryById } from '@/modules/categories/categories.service';
+import { listCategories } from '@/modules/categories/categories.service';
 import { listProducts } from '@/modules/products/products.service';
 import { ProductCard } from '@/components/storefront/ProductCard';
 import { ChevronRight, ChevronLeft, LayoutGrid, SlidersHorizontal } from 'lucide-react';
@@ -28,9 +28,7 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-function formatPrice(amount: number) {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(amount);
-}
+
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
