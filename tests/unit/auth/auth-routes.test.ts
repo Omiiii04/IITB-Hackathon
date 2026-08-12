@@ -15,6 +15,10 @@ vi.mock('@/lib/env', () => ({
   },
 }));
 
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi.fn(() => true),
+}));
+
 // Mock auth.service to decouple API route tests from real DB and crypto.
 vi.mock('@/modules/auth/auth.service', async (importOriginal) => {
   const original = await importOriginal<typeof import('@/modules/auth/auth.service')>();
@@ -30,6 +34,12 @@ vi.mock('@/lib/prisma', () => ({
     user: {
       findUnique: vi.fn(),
     },
+    session: {
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      delete: vi.fn(),
+      deleteMany: vi.fn(),
+    },
   },
 }));
 
@@ -42,6 +52,12 @@ import { REFRESH_COOKIE_NAME, signRefreshToken } from '@/modules/auth/jwt';
 
 const mockRegisterUser = registerUser as unknown as ReturnType<typeof vi.fn>;
 const mockUserDb = prisma.user as unknown as { findUnique: ReturnType<typeof vi.fn> };
+const mockSessionDb = prisma.session as unknown as { 
+  findUnique: ReturnType<typeof vi.fn>;
+  create: ReturnType<typeof vi.fn>;
+  delete: ReturnType<typeof vi.fn>;
+  deleteMany: ReturnType<typeof vi.fn>;
+};
 
 function makeRequest(body: unknown, cookies: Record<string, string> = {}): NextRequest {
   const cookieHeader = Object.entries(cookies)
@@ -59,6 +75,8 @@ function makeRequest(body: unknown, cookies: Record<string, string> = {}): NextR
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockSessionDb.create.mockResolvedValue({ id: 'mock-session-id' });
+  mockSessionDb.findUnique.mockResolvedValue({ id: 'mock-session-id' });
 });
 
 // ─── POST /api/auth/register ──────────────────────────────────────────────────

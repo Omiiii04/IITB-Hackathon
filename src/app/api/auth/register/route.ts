@@ -9,11 +9,17 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { registerSchema } from '@/modules/auth/schemas';
+import { rateLimit } from '@/lib/rate-limit';
 import { registerUser, EmailAlreadyExistsError } from '@/modules/auth/auth.service';
 import { logger } from '@/lib/logger';
 import type { ApiResponse, AuthUser } from '@/types';
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  if (!rateLimit(ip, 5, 60 * 1000)) { // 5 requests per minute
+    return NextResponse.json<ApiResponse>({ success: false, error: 'Too many requests, please try again later' }, { status: 429 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
