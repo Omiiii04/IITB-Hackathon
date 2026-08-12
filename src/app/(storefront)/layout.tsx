@@ -1,7 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Search, Zap } from 'lucide-react';
+import { Search, Zap } from 'lucide-react';
 import { StorefrontNav } from '@/components/storefront/StorefrontNav';
+import { CartDrawer } from '@/components/cart/CartDrawer';
+import { CartNavButton } from '@/components/cart/CartNavButton';
 
 export default function StorefrontLayout({
   children,
@@ -42,13 +44,7 @@ export default function StorefrontLayout({
 
           {/* Right nav */}
           <nav className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            <Link
-              href="/cart"
-              aria-label="Shopping cart"
-              className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-            >
-              <ShoppingBag className="h-4 w-4" />
-            </Link>
+            <CartNavButton />
             <Link
               href="/login"
               className="hidden sm:block rounded-lg px-3 py-1.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
@@ -67,6 +63,9 @@ export default function StorefrontLayout({
         {/* Category nav strip */}
         <StorefrontNav />
       </header>
+
+      {/* Slide-over cart drawer */}
+      <CartDrawer />
 
       {/* Page content */}
       <main className="flex-1 w-full">
