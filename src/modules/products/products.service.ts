@@ -1,10 +1,9 @@
-// Public read-only queries for the Product catalogue.
-// Writes (create / update / delete) live in the seller module.
-
 import { prisma } from '@/lib/prisma';
-import type { ListProductsQuery } from './schemas';
+import { getOwnStoreId } from '@/modules/auth/rbac';
+import type { ListProductsQuery, CreateProductInput, UpdateProductInput } from './schemas';
 
-// Fields exposed to the public — omits internal/admin fields.
+
+
 const PUBLIC_PRODUCT_SELECT = {
   id: true,
   title: true,
@@ -34,7 +33,6 @@ const PUBLIC_PRODUCT_SELECT = {
   },
 } as const;
 
-// ─── listProducts ─────────────────────────────────────────────────────────────
 export async function listProducts(query: ListProductsQuery) {
   const { categoryId, storeId, q, minPrice, maxPrice, sortBy, order, page, limit } = query;
 
@@ -72,7 +70,6 @@ export async function listProducts(query: ListProductsQuery) {
   return { products, total, page, limit, totalPages: Math.ceil(total / limit) };
 }
 
-// ─── getProductById ───────────────────────────────────────────────────────────
 export async function getProductById(id: string) {
   const product = await prisma.product.findFirst({
     where: { id, isActive: true },
@@ -81,11 +78,71 @@ export async function getProductById(id: string) {
   return product ?? null;
 }
 
-// ─── getProductBySlug ─────────────────────────────────────────────────────────
 export async function getProductBySlug(slug: string) {
   const product = await prisma.product.findFirst({
     where: { slug, isActive: true },
     select: PUBLIC_PRODUCT_SELECT,
   });
   return product ?? null;
+}
+
+export class NoStoreError extends Error {}
+export class ProductNotFoundError extends Error {}
+
+export async function listMyProducts(userId: string) {
+  const storeId = await getOwnStoreId(userId);
+  if (!storeId) throw new NoStoreError();
+
+  return prisma.product.findMany({
+    where: { storeId, isActive: true },
+    include: { variants: { where: { isActive: true } } },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function createProduct(userId: string, input: CreateProductInput) {
+  const storeId = await getOwnStoreId(userId);
+  if (!storeId) throw new NoStoreError();
+
+  return prisma.product.create({
+    data: { ...input, storeId },
+  });
+}
+
+export async function getMyProduct(userId: string, productId: string) {
+  const storeId = await getOwnStoreId(userId);
+  if (!storeId) throw new NoStoreError();
+
+  const product = await prisma.product.findFirst({
+    where: { id: productId, storeId, isActive: true },
+    include: { variants: { where: { isActive: true } } },
+  });
+
+  if (!product) throw new ProductNotFoundError();
+  return product;
+}
+
+export async function updateProduct(userId: string, productId: string, input: UpdateProductInput) {
+  const storeId = await getOwnStoreId(userId);
+  if (!storeId) throw new NoStoreError();
+
+  const result = await prisma.product.updateMany({
+    where: { id: productId, storeId },
+    data: input,
+  });
+
+  if (result.count === 0) throw new ProductNotFoundError();
+  return getMyProduct(userId, productId);
+}
+
+export async function deactivateProduct(userId: string, productId: string) {
+  const storeId = await getOwnStoreId(userId);
+  if (!storeId) throw new NoStoreError();
+
+  const result = await prisma.product.updateMany({
+    where: { id: productId, storeId },
+    data: { isActive: false },
+  });
+
+  if (result.count === 0) throw new ProductNotFoundError();
 }
