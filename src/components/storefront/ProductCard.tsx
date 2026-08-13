@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, Package } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
 
 export interface ProductCardData {
   id: string;
@@ -34,6 +37,7 @@ function formatPrice(amount: number): string {
 }
 
 export function ProductCard({ product, className }: ProductCardProps) {
+  const { addItem } = useCart();
   const lowestVariantPrice = product.variants.length > 0
     ? Math.min(...product.variants.map((v) => v.variantPrice))
     : null;
@@ -45,6 +49,22 @@ export function ProductCard({ product, className }: ProductCardProps) {
     ? (product.images as unknown[]).filter((x): x is string => typeof x === 'string')
     : [];
   const mainImage = safeImages[0];
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const firstVariant = product.variants[0];
+    if (firstVariant) {
+      addItem({
+        variantId: firstVariant.id,
+        productId: product.id,
+        title: product.title,
+        price: firstVariant.variantPrice,
+        imageUrl: mainImage,
+        storeName: product.store?.storeName ?? undefined,
+      });
+    }
+  };
 
   return (
     <Link
@@ -124,11 +144,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             <button
               type="button"
               aria-label={`Add ${product.title} to cart`}
-              onClick={(e) => {
-                // Prevent the card link from firing
-                e.preventDefault();
-                // Cart logic will be wired in the cart context
-              }}
+              onClick={handleAddToCart}
               className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/20 transition-colors flex-shrink-0"
             >
               <ShoppingCart className="h-3.5 w-3.5" />
