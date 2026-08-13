@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 interface CategoryNode {
@@ -20,7 +20,7 @@ export function CategoryTreeManager() {
   const [newParentId, setNewParentId] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -36,11 +36,11 @@ export function CategoryTreeManager() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fetchWithAuth]);
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [loadCategories]);
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
