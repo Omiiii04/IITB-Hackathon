@@ -144,3 +144,11 @@ vite.config.ts.timestamp-*
 .vite/
 
 AGENTS.md
+
+# Environment variable files — never commit secrets
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
