@@ -13,35 +13,35 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { logger } from '@/lib/logger';
 
-const isBuildPhase =
-  process.env.NEXT_PHASE === 'phase-production-build' ||
-  process.env.npm_lifecycle_event === 'build' ||
-  process.env.SKIP_ENV_VALIDATION === '1' ||
-  process.env.SKIP_ENV_VALIDATION === 'true';
+let isCloudinaryConfigured = false;
 
-function initCloudinary(): void {
+function ensureCloudinary(): boolean {
+  if (isCloudinaryConfigured) return true;
+
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey    = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
   if (!cloudName || !apiKey || !apiSecret) {
-    if (isBuildPhase) {
-      logger.warn('Cloudinary: credentials not set during build phase, skipping config');
-      return;
-    }
-    throw new Error(
-      'CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET must be set'
-    );
+    logger.warn('Cloudinary: credentials not set or incomplete');
+    return false;
   }
 
-  cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret, secure: true });
-
-  logger.info('Cloudinary client initialized', { cloud: cloudName });
+  try {
+    cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret, secure: true });
+    isCloudinaryConfigured = true;
+    logger.info('Cloudinary client initialized', { cloud: cloudName });
+    return true;
+  } catch (err) {
+    logger.error('Failed to configure Cloudinary', { error: err });
+    return false;
+  }
 }
 
-initCloudinary();
+// Initial configuration attempt (safe, will not throw)
+ensureCloudinary();
 
-export { cloudinary };
+export { cloudinary, ensureCloudinary };
 
 // ─── Upload helper ────────────────────────────────────────────────────────────
 
@@ -66,6 +66,10 @@ export async function uploadImage(
   folder = 'ecommerce',
   options: Record<string, unknown> = {}
 ): Promise<UploadResult> {
+  if (!ensureCloudinary()) {
+    throw new Error('Cloudinary is not configured on the server');
+  }
+
   const source =
     Buffer.isBuffer(file)
       ? `data:image/webp;base64,${file.toString('base64')}`
