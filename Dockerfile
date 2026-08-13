@@ -22,7 +22,7 @@ ENV JWT_ACCESS_SECRET="build_placeholder_jwt_access_secret_minimum_32_chars!"
 ENV JWT_REFRESH_SECRET="build_placeholder_jwt_refresh_secret_minimum_32_chars!"
 ENV NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-RUN npx prisma generate
+RUN node_modules/.bin/prisma generate
 RUN npm run build
 
 FROM base AS runner
