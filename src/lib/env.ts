@@ -72,4 +72,4 @@ export const env = new Proxy({} as Env, {
     if (typeof prop !== 'string') return undefined;
     return getValidatedEnv()[prop as keyof Env];
   },
-});
+});

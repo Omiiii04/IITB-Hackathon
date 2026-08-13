@@ -33,8 +33,12 @@ import type { ApiResponse } from '@/types';
 const STATE_COOKIE_NAME = 'google_oauth_state';
 const STATE_COOKIE_MAX_AGE_SECONDS = 300; // 5 min — long enough for the round trip
 
-// Path used for the state cookie so it is only sent back on this exact route.
-const STATE_COOKIE_PATH = '/api/auth/oauth/google';
+// Use path '/' so the browser reliably sends the cookie on the callback URL
+// (which has the same pathname but with ?code=&state= query parameters).
+// A narrow path like '/api/auth/oauth/google' caused state mismatches because
+// some browsers don't send cookies when the path matches but query parameters
+// are appended (behaviour varies between browser implementations).
+const STATE_COOKIE_PATH = '/';
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
