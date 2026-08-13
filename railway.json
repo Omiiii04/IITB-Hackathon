@@ -5,7 +5,9 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "node node_modules/prisma/build/index.js migrate deploy || echo 'Prisma migration step finished'; node server.js",
+    "startCommand": "node start.js",
+    "healthcheckPath": "/api/health",
+    "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
