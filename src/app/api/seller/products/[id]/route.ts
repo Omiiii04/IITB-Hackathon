@@ -7,7 +7,8 @@ import {
   NoStoreError,
   ProductNotFoundError,
 } from '@/modules/products/products.service';
-import { updateProductSchema } from '@/modules/products/schemas';
+import { addVariant, DuplicateSkuError } from '@/modules/products/variant.service';
+import { updateProductSchema, variantSchema } from '@/modules/products/schemas';
 import type { ApiResponse } from '@/types';
 
 interface RouteParams {
@@ -77,7 +78,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
   try {
     await deactivateProduct(auth.userId, id);
-    return NextResponse.json<ApiResponse>({ success: true, message: 'Product deactivated' });
+    return NextResponse.json<ApiResponse>({ success: true, data: null });
   } catch (err) {
     if (err instanceof NoStoreError) {
       return NextResponse.json<ApiResponse>(
@@ -91,3 +92,37 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     throw err;
   }
 }
+
+export async function POST(request: NextRequest, { params }: RouteParams) {
+  const auth = requireRole(request, ['SELLER']);
+  if (isAuthError(auth)) return auth.error;
+
+  const { id } = await params;
+  const body = await request.json();
+  const parsed = variantSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json<ApiResponse>(
+      { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const variant = await addVariant(auth.userId, id, parsed.data);
+    return NextResponse.json<ApiResponse>({ success: true, data: variant }, { status: 201 });
+  } catch (err) {
+    if (err instanceof NoStoreError) {
+      return NextResponse.json<ApiResponse>(
+        { success: false, error: 'No store found for this account' },
+        { status: 403 },
+      );
+    }
+    if (err instanceof ProductNotFoundError) {
+      return NextResponse.json<ApiResponse>({ success: false, error: 'Product not found' }, { status: 404 });
+    }
+    if (err instanceof DuplicateSkuError) {
+      return NextResponse.json<ApiResponse>({ success: false, error: 'SKU already in use' }, { status: 409 });
+    }
+    throw err;
+  }
+}

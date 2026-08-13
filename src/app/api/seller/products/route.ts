@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireRole, isAuthError } from '@/modules/auth/rbac';
-import { listMyProducts, createProduct, NoStoreError } from '@/modules/products/products.service';
+import {
+  listMyProducts,
+  createProduct,
+  NoStoreError,
+} from '@/modules/products/products.service';
 import { createProductSchema } from '@/modules/products/schemas';
 import type { ApiResponse } from '@/types';
 
@@ -48,3 +52,4 @@ export async function POST(request: NextRequest) {
     throw err;
   }
 }
+
