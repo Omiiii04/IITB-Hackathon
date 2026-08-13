@@ -14,7 +14,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
+    "db:seed": "ts-node prisma/seed.ts",
     "docker:db": "docker compose up postgres -d",
     "docker:db:down": "docker compose down",
     "docker:up": "docker compose --profile full up -d --build",
@@ -52,5 +52,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
