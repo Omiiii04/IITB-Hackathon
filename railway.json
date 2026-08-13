@@ -5,7 +5,7 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "npx --yes prisma@6 migrate deploy && node server.js",
+    "startCommand": "node node_modules/prisma/build/index.js migrate deploy && node server.js",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
