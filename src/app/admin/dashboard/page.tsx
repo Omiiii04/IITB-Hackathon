@@ -185,23 +185,7 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {!data && (
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-sm text-amber-300">
-          Sign in as an admin to view platform analytics.
-        </div>
-      )}
 
-      {data && (
-        <>
-          <PlatformMetricsCard metrics={data.platform} />
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
-              Top Stores by GMV
-            </h2>
-            <GMVChart data={data.topStores} />
-          </div>
-        </>
-      )}
     </div>
   );
 }
