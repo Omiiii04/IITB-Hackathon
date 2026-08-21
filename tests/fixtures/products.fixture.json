@@ -1,2 +1,49 @@
-{
-}
+[
+  {
+    "id": "prod-sample-001",
+    "title": "Heavyweight Oversized Cotton Hoodie",
+    "brand": "Aura",
+    "basePrice": 1499.0,
+    "categoryId": "cat-sample-001",
+    "storeId": "store-sample-001",
+    "variants": [
+      {
+        "id": "var-sample-001",
+        "sku": "AURA-HD-BLK-M",
+        "title": "M / Black",
+        "variantPrice": 1499.0,
+        "stock": 50,
+        "reservedStock": 0,
+        "attributes": { "size": "M", "color": "Black" }
+      },
+      {
+        "id": "var-sample-002",
+        "sku": "AURA-HD-BLK-L",
+        "title": "L / Black",
+        "variantPrice": 1499.0,
+        "stock": 40,
+        "reservedStock": 0,
+        "attributes": { "size": "L", "color": "Black" }
+      }
+    ]
+  },
+  {
+    "id": "prod-sample-002",
+    "title": "AeroSound Pro ANC Wireless Headphones",
+    "brand": "TechNova",
+    "basePrice": 4999.0,
+    "categoryId": "cat-sample-002",
+    "storeId": "store-sample-002",
+    "variants": [
+      {
+        "id": "var-sample-003",
+        "sku": "TN-ANC-BLK",
+        "title": "Stealth Black",
+        "variantPrice": 4999.0,
+        "stock": 25,
+        "reservedStock": 0,
+        "attributes": { "color": "Stealth Black" }
+      }
+    ]
+  }
+]
