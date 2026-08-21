@@ -43,32 +43,7 @@ export default function HomePage() {
 
   const isSeller = user?.role === 'SELLER' || user?.role === 'ADMIN';
 
-  const portals = [
-    {
-      title: 'Customer Storefront',
-      badge: 'Shop Portal',
-      desc: 'Browse multi-vendor catalogs, dynamic full-text search, live inventory reservations, and unified multi-store checkout.',
-      href: '/products',
-      cta: 'Enter Storefront',
-      icon: ShoppingBag,
-      color: 'text-[#0058be] bg-[#d8e2ff] border-[#adc6ff]',
-      accentBg: 'from-blue-500/10 via-indigo-500/5 to-transparent',
-      borderColor: 'hover:border-[#0058be]',
-      btnBg: 'bg-[#0058be] hover:bg-[#004395] text-white',
-    },
-    {
-      title: 'Seller Merchant Hub',
-      badge: 'Merchant Portal',
-      desc: 'Real-time multi-tenant stock management, sub-order fulfillment lifecycle, OTP delivery handoffs, and seller analytics.',
-      href: '/seller/dashboard',
-      cta: 'Enter Seller Hub',
-      icon: Store,
-      color: 'text-[#006c49] bg-[#6cf8bb]/30 border-[#4edea3]',
-      accentBg: 'from-emerald-500/10 via-teal-500/5 to-transparent',
-      borderColor: 'hover:border-emerald-500',
-      btnBg: 'bg-[#006c49] hover:bg-[#005237] text-white',
-    },
-  ];
+
 
   const platformPillars = [
     {

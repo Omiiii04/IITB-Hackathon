@@ -144,7 +144,17 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const minPrice = sp.minPrice ? Number(sp.minPrice) : undefined;
   const maxPrice = sp.maxPrice ? Number(sp.maxPrice) : undefined;
 
-  let products: any[] = [];
+  let products: Array<{
+    id: string;
+    title: string;
+    slug: string;
+    basePrice: number;
+    images: string[];
+    brand: string;
+    category: { name: string; slug: string };
+    store: { storeName: string; slug: string };
+    variants: Array<{ id: string; variantPrice: number; stock: number }>;
+  }> = [];
   let total = 0;
   let totalPages = 1;
 
