@@ -66,13 +66,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   if (error || !order) {
     return (
-      <div className="rounded-3xl border border-amber-500/30 bg-amber-500/10 p-8 text-center text-amber-300 space-y-4 max-w-md mx-auto my-12">
-        <AlertCircle className="mx-auto h-10 w-10 text-amber-400" />
-        <h3 className="text-base font-bold text-white">Order Not Found</h3>
-        <p className="text-xs text-amber-400/80">{error ?? 'The requested order could not be located.'}</p>
+      <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8 text-center text-amber-800 space-y-4 max-w-md mx-auto my-12">
+        <AlertCircle className="mx-auto h-10 w-10 text-amber-600" />
+        <h3 className="text-base font-bold text-[#191b23]">Order Not Found</h3>
+        <p className="text-xs text-amber-700">{error ?? 'The requested order could not be located.'}</p>
         <Link
           href="/account/orders"
-          className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-500 px-5 py-2.5 text-xs font-semibold text-white transition-colors"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[#0058be] hover:bg-[#004395] px-5 py-2.5 text-xs font-semibold text-white transition-colors cursor-pointer shadow-sm"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to My Orders</span>
@@ -97,26 +97,26 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       {/* Back button */}
       <Link
         href="/account/orders"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-blue-400 transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#64748B] hover:text-[#0058be] transition-colors"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>Back to Order History</span>
       </Link>
 
       {/* Header card */}
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-sm space-y-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-800/80 pb-4">
+      <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-sm space-y-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#E2E8F0] pb-4">
           <div>
             <div className="flex items-center gap-3 flex-wrap">
-              <h2 className="text-xl font-extrabold text-white">
+              <h2 className="text-xl font-extrabold text-[#191b23]">
                 Order #{order.orderNumber ?? order.id.slice(0, 8)}
               </h2>
               <span className={`text-xs font-semibold px-3 py-0.5 rounded-full border ${statusInfo.style}`}>
                 {statusInfo.label}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-              <Calendar className="h-3.5 w-3.5 text-slate-500" />
+            <div className="flex items-center gap-2 text-xs text-[#64748B] mt-1">
+              <Calendar className="h-3.5 w-3.5 text-[#94A3B8]" />
               <span>Placed on {formattedDate}</span>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
         {/* Live Order Progress Timeline */}
         <div className="pt-2">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+          <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-4">
             Live Order Tracking
           </h3>
           <OrderTimeline steps={order.timelineSteps} orderStatus={order.orderStatus} />
@@ -139,11 +139,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         {/* Left column: Sub-orders by seller store */}
         <div className="lg:col-span-8 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Package className="h-4 w-4 text-blue-400" />
+            <h3 className="text-base font-bold text-[#191b23] flex items-center gap-2">
+              <Package className="h-4 w-4 text-[#0058be]" />
               <span>Ordered Items</span>
             </h3>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-[#64748B]">
               Split across {order.storeGroups?.length ?? 0} seller store{(order.storeGroups?.length ?? 0) !== 1 ? 's' : ''}
             </span>
           </div>
@@ -158,79 +158,79 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         <div className="lg:col-span-4 space-y-6">
           {/* Shipping Address */}
           {address && (
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-5 backdrop-blur-sm space-y-3">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-blue-400" />
+            <div className="rounded-3xl border border-[#E2E8F0] bg-white p-5 shadow-sm space-y-3">
+              <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider flex items-center gap-2">
+                <MapPin className="h-3.5 w-3.5 text-[#0058be]" />
                 <span>Shipping Address</span>
               </h4>
               <div>
-                <p className="text-sm font-bold text-white">{address.recipientName}</p>
-                <p className="text-xs text-slate-300 leading-relaxed mt-1">
+                <p className="text-sm font-bold text-[#191b23]">{address.recipientName}</p>
+                <p className="text-xs text-[#475569] leading-relaxed mt-1">
                   {address.line1}
                   {address.line2 ? `, ${address.line2}` : ''}
                 </p>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  {address.city}, {address.state} &mdash; <span className="font-mono text-slate-300">{address.postalCode}</span>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  {address.city}, {address.state} &mdash; <span className="font-mono font-semibold text-[#191b23]">{address.postalCode}</span>
                 </p>
-                <p className="text-xs font-mono text-slate-400 mt-1">Phone: {address.phone}</p>
+                <p className="text-xs font-mono text-[#94A3B8] mt-1">Phone: {address.phone}</p>
               </div>
             </div>
           )}
 
           {/* Payment & Financial Breakdown */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-5 backdrop-blur-sm space-y-4">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-              <CreditCard className="h-3.5 w-3.5 text-blue-400" />
+          <div className="rounded-3xl border border-[#E2E8F0] bg-white p-5 shadow-sm space-y-4">
+            <h4 className="text-xs font-bold text-[#64748B] uppercase tracking-wider flex items-center gap-2">
+              <CreditCard className="h-3.5 w-3.5 text-[#0058be]" />
               <span>Payment Details</span>
             </h4>
 
             {payment && (
-              <div className="rounded-2xl border border-slate-800 bg-slate-800/40 p-3 text-xs space-y-1">
+              <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3 text-xs space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Method</span>
-                  <span className="font-semibold text-white uppercase">{payment.provider}</span>
+                  <span className="text-[#64748B]">Method</span>
+                  <span className="font-semibold text-[#191b23] uppercase">{payment.provider}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Transaction ID</span>
-                  <span className="font-mono text-slate-300 truncate max-w-[140px]">{payment.transactionId}</span>
+                  <span className="text-[#64748B]">Transaction ID</span>
+                  <span className="font-mono text-[#191b23] truncate max-w-[140px]">{payment.transactionId}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Status</span>
-                  <span className="font-semibold text-emerald-400">{payment.status}</span>
+                  <span className="text-[#64748B]">Status</span>
+                  <span className="font-semibold text-emerald-600">{payment.status}</span>
                 </div>
               </div>
             )}
 
             {/* Financials breakdown */}
-            <div className="space-y-2 text-xs border-t border-slate-800 pt-3">
-              <div className="flex justify-between text-slate-400">
+            <div className="space-y-2 text-xs border-t border-[#E2E8F0] pt-3">
+              <div className="flex justify-between text-[#64748B]">
                 <span>Subtotal</span>
-                <span className="text-slate-200">
+                <span className="font-semibold text-[#191b23]">
                   &#8377;{(order.totalAmount - (order.taxAmount || 0) - (order.shippingAmount || 0) + (order.discountAmount || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-[#64748B]">
                 <span>GST (18% est.)</span>
-                <span className="text-slate-200">&#8377;{(order.taxAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-semibold text-[#191b23]">&#8377;{(order.taxAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-[#64748B]">
                 <span>Shipping Fee</span>
-                <span className="text-slate-200">&#8377;{(order.shippingAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-semibold text-[#191b23]">&#8377;{(order.shippingAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               </div>
               {Boolean(order.discountAmount) && (
-                <div className="flex justify-between text-emerald-400 font-semibold">
+                <div className="flex justify-between text-emerald-600 font-semibold">
                   <span>Coupon Discount ({order.coupon?.code ?? 'PROMO'})</span>
                   <span>&minus;&#8377;{order.discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                 </div>
               )}
-              <div className="flex justify-between text-sm font-extrabold text-white border-t border-slate-700 pt-2.5 mt-2">
+              <div className="flex justify-between text-sm font-extrabold text-[#191b23] border-t border-[#E2E8F0] pt-2.5 mt-2">
                 <span>Grand Total</span>
-                <span>&#8377;{order.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="text-base text-[#0058be]">&#8377;{order.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 pt-2 border-t border-slate-800/80">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#64748B] pt-2 border-t border-[#E2E8F0]">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
               <span>Razorpay Verified Payment</span>
             </div>
           </div>

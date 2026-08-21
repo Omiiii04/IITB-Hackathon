@@ -77,28 +77,28 @@ function VerifyEmailContent() {
   };
 
   return (
-    <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-md">
-      <div className="mb-6 text-center">
-        <div className="h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mx-auto mb-3">
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div className="w-full rounded-3xl border border-[#E2E8F0] bg-white p-8 sm:p-10 shadow-sm">
+      <div className="mb-8 text-center">
+        <div className="h-14 w-14 rounded-2xl bg-[#d8e2ff] border border-[#adc6ff] text-[#0058be] flex items-center justify-center mx-auto mb-4">
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Email Verification</h1>
-        <p className="mt-1 text-sm text-slate-400">Confirm your account email address</p>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#191b23] tracking-tight">Email Verification</h1>
+        <p className="mt-1.5 text-sm text-[#64748B]">Confirm your FlexHub account email address</p>
       </div>
 
       {status === 'verifying' && (
         <div className="text-center py-6 space-y-3">
-          <div className="h-8 w-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin mx-auto" />
-          <p className="text-sm text-slate-300">Verifying your token...</p>
+          <div className="h-8 w-8 rounded-full border-2 border-[#0058be]/30 border-t-[#0058be] animate-spin mx-auto" />
+          <p className="text-sm text-[#475569]">Verifying your token...</p>
         </div>
       )}
 
       {status === 'success' && (
         <div className="text-center py-4 space-y-4">
-          <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm flex flex-col items-center gap-2">
-            <svg className="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm flex flex-col items-center gap-2">
+            <svg className="w-8 h-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-semibold">{message}</span>
@@ -106,7 +106,7 @@ function VerifyEmailContent() {
 
           <Link
             href="/login"
-            className="inline-block w-full rounded-xl bg-blue-600 hover:bg-blue-500 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all text-center"
+            className="inline-block w-full rounded-xl bg-[#0058be] hover:bg-[#004395] py-3 text-sm font-semibold text-white shadow-sm transition-all text-center"
           >
             Proceed to Sign In
           </Link>
@@ -115,19 +115,19 @@ function VerifyEmailContent() {
 
       {status === 'error' && (
         <div className="text-center py-2 space-y-4">
-          <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 text-sm flex flex-col items-center gap-2">
-            <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="p-4 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm flex flex-col items-center gap-2">
+            <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>{message}</span>
+            <span className="font-medium">{message}</span>
           </div>
         </div>
       )}
 
       {(status === 'idle' || status === 'error') && (
-        <div className="mt-4 border-t border-slate-800 pt-6">
-          <h2 className="text-sm font-semibold text-slate-200 mb-2">Request a New Verification Link</h2>
-          <p className="text-xs text-slate-400 mb-4">
+        <div className="mt-6 border-t border-[#E2E8F0] pt-6">
+          <h2 className="text-sm font-bold text-[#191b23] mb-1">Request a New Verification Link</h2>
+          <p className="text-xs text-[#64748B] mb-4">
             Enter your account email address to receive a fresh verification link.
           </p>
 
@@ -138,17 +138,17 @@ function VerifyEmailContent() {
               value={resendEmail}
               onChange={(e) => setResendEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+              className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2.5 text-sm text-[#191b23] placeholder-[#94A3B8] focus:border-[#0058be] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0058be]/20 transition-colors"
             />
 
             <button
               type="submit"
               disabled={resendStatus === 'sending'}
-              className="w-full rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] text-[#191b23] py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {resendStatus === 'sending' ? (
                 <>
-                  <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                  <div className="h-4 w-4 rounded-full border-2 border-slate-600/30 border-t-slate-600 animate-spin" />
                   <span>Sending Link...</span>
                 </>
               ) : (
@@ -159,10 +159,10 @@ function VerifyEmailContent() {
 
           {resendMessage && (
             <div
-              className={`mt-3 p-3 rounded-xl text-xs ${
+              className={`mt-3 p-3 rounded-xl text-xs font-medium ${
                 resendStatus === 'sent'
-                  ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-                  : 'border border-red-500/30 bg-red-500/10 text-red-400'
+                  ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+                  : 'border border-red-200 bg-red-50 text-red-600'
               }`}
             >
               {resendMessage}
@@ -171,8 +171,8 @@ function VerifyEmailContent() {
         </div>
       )}
 
-      <div className="mt-6 border-t border-slate-800/80 pt-4 text-center">
-        <Link href="/login" className="text-xs font-semibold text-blue-400 hover:underline">
+      <div className="mt-8 border-t border-[#E2E8F0] pt-5 text-center">
+        <Link href="/login" className="text-xs font-bold text-[#0058be] hover:underline">
           Back to Sign In
         </Link>
       </div>
@@ -184,7 +184,7 @@ export default function VerifyEmailPage() {
   return (
     <Suspense
       fallback={
-        <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/80 p-8 text-center text-slate-400">
+        <div className="w-full rounded-3xl border border-[#E2E8F0] bg-white p-8 text-center text-[#64748B]">
           Loading...
         </div>
       }

@@ -91,7 +91,7 @@ export default function CheckoutPage() {
         orderId: body.razorpayOrderId,
         amountPaisa: body.amount,
         currency: body.currency ?? 'INR',
-        storeName: body.storeName ?? 'MarketHub',
+        storeName: body.storeName ?? 'FlexHub',
         prefill: {
           name: selectedAddress.recipientName,
           contact: selectedAddress.phone,
@@ -145,26 +145,26 @@ export default function CheckoutPage() {
   if (step === 'success') {
     return (
       <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <div className="rounded-3xl border border-emerald-500/30 bg-emerald-500/10 p-12 backdrop-blur-sm">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-500/20 text-emerald-400">
+        <div className="rounded-3xl border border-emerald-200 bg-white p-12 shadow-sm">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-50 text-emerald-600 border border-emerald-100">
             <CheckCircle2 className="h-10 w-10" />
           </div>
-          <h1 className="mb-2 text-2xl font-extrabold text-white">Order Placed!</h1>
-          <p className="text-sm text-slate-400 mb-8">
+          <h1 className="mb-2 text-2xl font-extrabold text-[#191b23]">Order Placed!</h1>
+          <p className="text-sm text-[#64748B] mb-8 leading-relaxed">
             Your payment was successful and your order is being processed. You will receive a
             confirmation shortly.
           </p>
           <div className="flex flex-col gap-3">
             <Link
               href="/account/orders"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 hover:bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0058be] hover:bg-[#004395] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all"
             >
               <Package className="h-4 w-4" />
               View My Orders
             </Link>
             <Link
               href="/products"
-              className="text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              className="text-xs font-semibold text-[#64748B] hover:text-[#0058be] transition-colors"
             >
               Continue Shopping
             </Link>
@@ -178,15 +178,15 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="flex flex-col items-center justify-center rounded-3xl border border-slate-800 bg-slate-900/60 p-12 text-center backdrop-blur-sm max-w-lg mx-auto">
-          <div className="h-20 w-20 rounded-3xl bg-slate-800 flex items-center justify-center mb-6 text-slate-500 shadow-inner">
-            <ShoppingBag className="h-10 w-10 text-slate-400" />
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-[#E2E8F0] bg-white p-12 text-center shadow-sm max-w-lg mx-auto">
+          <div className="h-20 w-20 rounded-3xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center mb-6 text-[#64748B]">
+            <ShoppingBag className="h-10 w-10 text-[#0058be]" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Your cart is empty</h1>
-          <p className="text-sm text-slate-400 mb-8">Add items to your cart before checking out.</p>
+          <h1 className="text-2xl font-bold text-[#191b23] mb-2">Your cart is empty</h1>
+          <p className="text-sm text-[#64748B] mb-8 leading-relaxed">Add items to your cart before checking out.</p>
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all"
+            className="inline-flex items-center gap-2 rounded-2xl bg-[#0058be] hover:bg-[#004395] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all"
           >
             <ArrowLeft className="h-4 w-4" />
             Browse Products
@@ -211,14 +211,14 @@ export default function CheckoutPage() {
       <div className="mb-8 flex items-center gap-4">
         <Link
           href="/cart"
-          className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+          className="flex items-center gap-1.5 text-xs text-[#0058be] hover:text-[#004395] font-semibold transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to Cart
         </Link>
         <div>
-          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">Checkout</h1>
-          <p className="mt-0.5 text-xs text-slate-400">
+          <h1 className="text-2xl font-extrabold text-[#191b23] sm:text-3xl">Checkout</h1>
+          <p className="mt-0.5 text-xs text-[#64748B]">
             {itemCount} item{itemCount !== 1 ? 's' : ''} &middot; Secure payment via Razorpay
           </p>
         </div>
@@ -229,9 +229,9 @@ export default function CheckoutPage() {
         <div className="lg:col-span-7 space-y-6">
 
           {/* Delivery Address */}
-          <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-sm">
-            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-white">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+          <section className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
+            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-[#191b23]">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0058be] text-xs font-black text-white">
                 1
               </span>
               Delivery Address
@@ -243,9 +243,9 @@ export default function CheckoutPage() {
           </section>
 
           {/* Coupon */}
-          <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-sm">
-            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-white">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+          <section className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
+            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-[#191b23]">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0058be] text-xs font-black text-white">
                 2
               </span>
               Promo Code
@@ -259,9 +259,9 @@ export default function CheckoutPage() {
           </section>
 
           {/* Items by store */}
-          <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-sm">
-            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-white">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+          <section className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
+            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-[#191b23]">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0058be] text-xs font-black text-white">
                 3
               </span>
               Order Items
@@ -269,35 +269,35 @@ export default function CheckoutPage() {
             <div className="space-y-4">
               {storeGroups.map((group) => (
                 <div key={group.storeId} className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Store className="h-3.5 w-3.5 text-blue-400" />
-                    <span className="text-xs font-semibold text-slate-300">{group.storeName}</span>
+                  <div className="flex items-center gap-2 border-b border-[#F1F5F9] pb-2">
+                    <Store className="h-3.5 w-3.5 text-[#0058be]" />
+                    <span className="text-xs font-semibold text-[#64748B]">{group.storeName}</span>
                   </div>
                   {group.items.map((item) => (
                     <div
                       key={`${item.productId}-${item.variantId ?? 'base'}`}
-                      className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-800/40 p-3"
+                      className="flex items-center gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3"
                     >
                       {item.imageUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={item.imageUrl}
                           alt={item.title}
-                          className="h-12 w-12 rounded-xl object-cover shrink-0"
+                          className="h-12 w-12 rounded-xl object-contain mix-blend-multiply bg-white border border-[#E2E8F0] p-1 shrink-0"
                         />
                       ) : (
-                        <div className="h-12 w-12 rounded-xl bg-slate-700 flex items-center justify-center shrink-0">
-                          <Package className="h-5 w-5 text-slate-500" />
+                        <div className="h-12 w-12 rounded-xl bg-white border border-[#E2E8F0] flex items-center justify-center shrink-0">
+                          <Package className="h-5 w-5 text-[#94A3B8]" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{item.title}</p>
+                        <p className="text-sm font-medium text-[#191b23] truncate">{item.title}</p>
                         {item.variantTitle && (
-                          <p className="text-xs text-slate-400">{item.variantTitle}</p>
+                          <p className="text-xs text-[#64748B]">{item.variantTitle}</p>
                         )}
-                        <p className="text-xs text-slate-500">Qty: {item.quantity}</p>
+                        <p className="text-xs text-[#64748B]">Qty: {item.quantity}</p>
                       </div>
-                      <p className="text-sm font-bold text-white shrink-0">
+                      <p className="text-sm font-bold text-[#191b23] shrink-0">
                         &#8377;{item.itemSubtotal.toLocaleString('en-IN')}
                       </p>
                     </div>
@@ -311,11 +311,11 @@ export default function CheckoutPage() {
         {/* ── Right Column: Order Summary ──────────────────────────────────── */}
         <div className="lg:col-span-5">
           <div className="sticky top-24">
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-sm space-y-5">
-              <h2 className="text-base font-bold text-white">Order Summary</h2>
+            <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-sm space-y-5">
+              <h2 className="text-base font-bold text-[#191b23]">Order Summary</h2>
 
               {/* Line items */}
-              <div className="space-y-3 text-sm">
+              <div className="space-y-3 text-xs">
                 <SummaryRow label={`Subtotal (${itemCount} items)`} value={subtotal} />
                 <SummaryRow label="GST (18% est.)" value={estimatedTax} />
                 <SummaryRow label={`Shipping (${storeGroups.length} store${storeGroups.length !== 1 ? 's' : ''})`} value={estimatedShipping} />
@@ -324,19 +324,19 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <div className="border-t border-slate-700 pt-4">
+              <div className="border-t border-[#E2E8F0] pt-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-base font-bold text-white">Grand Total</span>
-                  <span className="text-xl font-extrabold text-white">
+                  <span className="text-base font-bold text-[#191b23]">Grand Total</span>
+                  <span className="text-2xl font-extrabold text-[#191b23]">
                     &#8377;{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-slate-500">Inclusive of all taxes</p>
+                <p className="mt-1 text-[11px] text-[#64748B]">Inclusive of all taxes & shipping</p>
               </div>
 
               {/* Error */}
               {errorMessage && (
-                <div className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-xs text-red-400">
+                <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-600">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
                   <span>{errorMessage}</span>
                 </div>
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
                 id="checkout-place-order-btn"
                 onClick={handlePlaceOrder}
                 disabled={step === 'placing' || step === 'paying' || step === 'verifying'}
-                className="w-full inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-60 disabled:cursor-not-allowed px-6 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all duration-200"
+                className="w-full inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#0058be] hover:bg-[#004395] disabled:opacity-60 disabled:cursor-not-allowed px-6 py-4 text-sm font-bold text-white shadow-sm transition-all duration-200"
               >
                 {step === 'placing' || step === 'verifying' ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -365,8 +365,8 @@ export default function CheckoutPage() {
               </button>
 
               {/* Trust badges */}
-              <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+              <div className="flex items-center justify-center gap-2 text-[11px] text-[#64748B]">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
                 <span>256-bit SSL encrypted &bull; Powered by Razorpay</span>
               </div>
             </div>
@@ -391,8 +391,8 @@ function SummaryRow({
   const formatted = `₹${Math.abs(value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
   return (
     <div className="flex items-center justify-between">
-      <span className="text-slate-400">{label}</span>
-      <span className={accent === 'emerald' ? 'text-emerald-400 font-semibold' : 'text-slate-200'}>
+      <span className="text-[#64748B]">{label}</span>
+      <span className={accent === 'emerald' ? 'text-emerald-600 font-semibold' : 'text-[#191b23] font-semibold'}>
         {value < 0 ? `−${formatted}` : formatted}
       </span>
     </div>

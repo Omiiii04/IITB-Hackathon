@@ -6,9 +6,9 @@ import { listCategories } from '@/modules/categories/categories.service';
 import { ProductCard } from '@/components/storefront/ProductCard';
 
 export const metadata = {
-  title: 'MarketHub — Multi-Vendor Marketplace',
+  title: 'FlexHub — Multi-Vendor Marketplace',
   description:
-    'Discover thousands of products from verified sellers on MarketHub. Shop electronics, fashion, home goods and more.',
+    'Discover thousands of products from verified sellers on FlexHub. Shop electronics, peripherals, audio, computing and more.',
 };
 
 async function FeaturedProductsSection() {
@@ -22,12 +22,12 @@ async function FeaturedProductsSection() {
 
   if (products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <Package className="h-12 w-12 text-slate-600 mb-4" />
-        <p className="text-slate-400 text-sm">No products listed yet — check back soon!</p>
+      <div className="flex flex-col items-center justify-center py-16 text-center rounded-3xl border border-[#E2E8F0] bg-white p-8">
+        <Package className="h-12 w-12 text-[#94A3B8] mb-4" />
+        <p className="text-[#64748B] text-sm">Explore thousands of curated products on FlexHub!</p>
         <Link
           href="/products"
-          className="mt-4 inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#0058be] hover:underline transition-colors"
         >
           Browse all products <ArrowRight className="h-3.5 w-3.5" />
         </Link>
@@ -60,14 +60,14 @@ async function CategoryChipsSection() {
         <Link
           key={cat.id}
           href={`/categories/${cat.slug}`}
-          className="rounded-full border border-slate-700 bg-slate-800/60 px-4 py-1.5 text-sm text-slate-300 hover:border-blue-500/50 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-200"
+          className="rounded-full border border-[#E2E8F0] bg-white px-4 py-1.5 text-sm font-semibold text-[#191b23] hover:border-[#0058be] hover:text-[#0058be] hover:bg-[#F8FAFC] transition-all duration-200 shadow-2xs"
         >
           {cat.name}
         </Link>
       ))}
       <Link
         href="/products"
-        className="rounded-full border border-blue-500/40 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-400 hover:bg-blue-500/20 transition-colors"
+        className="rounded-full border border-[#adc6ff] bg-[#d8e2ff] px-4 py-1.5 text-sm font-bold text-[#0058be] hover:bg-[#c4d6ff] transition-colors"
       >
         View all
       </Link>
@@ -80,57 +80,53 @@ const highlights = [
     icon: TrendingUp,
     title: 'Trending Deals',
     desc: 'Curated top picks updated daily across all seller stores.',
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10 border-blue-500/20',
+    color: 'text-[#0058be]',
+    bg: 'bg-white border-[#E2E8F0]',
   },
   {
     icon: ShieldCheck,
     title: 'Verified Sellers',
     desc: 'Every seller is approved and monitored for quality and compliance.',
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    color: 'text-emerald-600',
+    bg: 'bg-white border-[#E2E8F0]',
   },
   {
     icon: Package,
     title: 'Fast Fulfilment',
     desc: 'Real-time inventory with OTP-secured delivery handoffs.',
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10 border-amber-500/20',
+    color: 'text-amber-600',
+    bg: 'bg-white border-[#E2E8F0]',
   },
 ];
 
 export default async function StorefrontHomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8 space-y-14">
-      <section className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-blue-600/20 via-indigo-600/10 to-slate-900 px-8 py-16 text-center">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 left-1/2 -translate-x-1/2 h-64 w-[600px] rounded-full bg-blue-500/20 blur-[80px]" />
-          <div className="absolute bottom-0 right-0 h-48 w-96 rounded-full bg-indigo-500/15 blur-[80px]" />
-        </div>
+      <section className="relative overflow-hidden rounded-3xl border border-[#E2E8F0] bg-gradient-to-br from-blue-50 via-indigo-50/40 to-white px-8 py-16 text-center shadow-xs">
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-xs font-semibold text-blue-300 mb-6">
-            <Sparkles className="h-3 w-3 text-blue-400 animate-pulse" />
-            <span>Multi-Vendor Marketplace</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#adc6ff] bg-[#d8e2ff] px-4 py-1.5 text-xs font-bold text-[#0058be] mb-6 shadow-2xs">
+            <Sparkles className="h-3 w-3 text-[#0058be]" />
+            <span>FlexHub Multi-Vendor Ecosystem</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#191b23] mb-4">
             Shop from Hundreds of{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400 bg-clip-text text-transparent">
+            <span className="text-[#0058be]">
               Verified Sellers
             </span>
           </h1>
-          <p className="mx-auto max-w-xl text-slate-300 text-sm sm:text-base leading-relaxed mb-8">
-            Discover competitive prices, exclusive deals, and curated collections — all in one place.
+          <p className="mx-auto max-w-xl text-[#475569] text-sm sm:text-base leading-relaxed mb-8">
+            Discover competitive prices, instantaneous reservation locks, and curated collections — all in one place.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#0058be] hover:bg-[#004395] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5"
             >
               Shop Now <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/seller-register"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-700 px-6 py-2.5 text-sm font-semibold text-slate-300 hover:text-white transition-all"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] px-6 py-2.5 text-sm font-semibold text-[#191b23] transition-all shadow-2xs"
             >
               Become a Seller
             </Link>
@@ -140,25 +136,25 @@ export default async function StorefrontHomePage() {
 
       <section>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-white">Shop by Category</h2>
-          <Link href="/products" className="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+          <h2 className="text-lg font-bold text-[#191b23]">Shop by Category</h2>
+          <Link href="/products" className="text-xs font-bold text-[#0058be] hover:underline transition-colors flex items-center gap-1">
             All Products <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
-        <Suspense fallback={<div className="flex flex-wrap gap-2 justify-center">{Array.from({length:6}).map((_,i)=><div key={i} className="h-8 w-24 animate-pulse rounded-full bg-slate-800" />)}</div>}>
+        <Suspense fallback={<div className="flex flex-wrap gap-2 justify-center">{Array.from({length:6}).map((_,i)=><div key={i} className="h-8 w-24 animate-pulse rounded-full bg-slate-200" />)}</div>}>
           <CategoryChipsSection />
         </Suspense>
       </section>
 
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {highlights.map(({ icon: Icon, title, desc, color, bg }) => (
-          <div key={title} className={`flex items-start gap-4 rounded-2xl border ${bg} p-5`}>
-            <div className={`flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-xl border ${bg}`}>
+          <div key={title} className={`flex items-start gap-4 rounded-3xl border ${bg} p-6 shadow-2xs`}>
+            <div className="flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0]">
               <Icon className={`h-5 w-5 ${color}`} />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white mb-1">{title}</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">{desc}</p>
+              <h3 className="text-sm font-bold text-[#191b23] mb-1">{title}</h3>
+              <p className="text-xs text-[#64748B] leading-relaxed">{desc}</p>
             </div>
           </div>
         ))}
@@ -167,14 +163,14 @@ export default async function StorefrontHomePage() {
       <section>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-lg font-bold text-white">New Arrivals</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Latest products from our sellers</p>
+            <h2 className="text-lg font-bold text-[#191b23]">New Arrivals</h2>
+            <p className="text-xs text-[#64748B] mt-0.5">Latest products from our sellers</p>
           </div>
-          <Link href="/products" className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">
+          <Link href="/products" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0058be] hover:underline transition-colors">
             View all <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <Suspense fallback={<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">{Array.from({length:8}).map((_,i)=><div key={i} className="aspect-[3/4] animate-pulse rounded-2xl bg-slate-800/60" />)}</div>}>
+        <Suspense fallback={<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">{Array.from({length:8}).map((_,i)=><div key={i} className="aspect-[3/4] animate-pulse rounded-2xl bg-slate-100" />)}</div>}>
           <FeaturedProductsSection />
         </Suspense>
       </section>

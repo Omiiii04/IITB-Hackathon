@@ -25,7 +25,7 @@ export default function NotFound() {
           className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-500 transition-all"
         >
           <Home className="h-4 w-4" />
-          MarketHub Portal
+          FlexHub Portal
         </Link>
         <Link
           href="/products"

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const listProductsQuerySchema = z.object({
-  categoryId: z.string().uuid().optional(),
+  categoryId: z.string().trim().optional(),
   storeId: z.string().uuid().optional(),
   q: z.string().trim().max(200).optional(),
   minPrice: z.coerce.number().min(0).optional(),

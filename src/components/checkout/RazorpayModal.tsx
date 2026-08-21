@@ -79,7 +79,7 @@ export const RazorpayModal = forwardRef<RazorpayModalHandle, RazorpayModalProps>
     }, [onFailure]);
 
     useImperativeHandle(ref, () => ({
-      open({ orderId, amountPaisa, currency = 'INR', storeName = 'MarketHub', prefill }: OpenRazorpayParams) {
+      open({ orderId, amountPaisa, currency = 'INR', storeName = 'FlexHub', prefill }: OpenRazorpayParams) {
         const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 
         if (!keyId) {
@@ -97,7 +97,7 @@ export const RazorpayModal = forwardRef<RazorpayModalHandle, RazorpayModalProps>
           amount: amountPaisa,
           currency,
           name: storeName,
-          description: 'MarketHub Order Payment',
+          description: 'FlexHub Order Payment',
           order_id: orderId,
           prefill,
           theme: { color: '#3b82f6' },

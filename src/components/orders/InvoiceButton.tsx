@@ -65,7 +65,7 @@ export function InvoiceButton({ orderId, className = '' }: InvoiceButtonProps) {
         </head>
         <body>
           <div class="header">
-            <div class="logo">MarketHub</div>
+            <div class="logo">FlexHub</div>
             <div class="title">
               TAX INVOICE<br/>
               <span style="font-size: 13px; font-weight: normal; color: #64748b;">${invoiceData.invoiceNumber}</span>
@@ -107,7 +107,7 @@ export function InvoiceButton({ orderId, className = '' }: InvoiceButtonProps) {
             <div class="totals-row grand"><span>Grand Total:</span><span>₹${(invoiceData.financials?.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
           </div>
           <div class="footer">
-            Thank you for shopping on MarketHub! This is a computer-generated tax invoice.
+            Thank you for shopping on FlexHub! This is a computer-generated tax invoice.
           </div>
           <script>
             window.onload = function() { window.print(); };
@@ -132,21 +132,21 @@ export function InvoiceButton({ orderId, className = '' }: InvoiceButtonProps) {
         onClick={handleDownloadInvoice}
         disabled={loading}
         className={[
-          'inline-flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-800/80 hover:bg-slate-800 hover:border-slate-600 px-4 py-2 text-xs font-semibold text-slate-200 transition-all duration-200 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed',
+          'inline-flex items-center gap-2 rounded-2xl border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] hover:border-[#CBD5E1] px-4 py-2 text-xs font-semibold text-[#191b23] transition-all duration-200 shadow-2xs disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer',
           className,
         ].join(' ')}
       >
         {loading ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-400" />
+          <Loader2 className="h-3.5 w-3.5 animate-spin text-[#0058be]" />
         ) : (
-          <FileText className="h-3.5 w-3.5 text-blue-400" />
+          <FileText className="h-3.5 w-3.5 text-[#0058be]" />
         )}
         <span>{loading ? 'Generating…' : 'Tax Invoice'}</span>
-        <Download className="h-3 w-3 text-slate-400" />
+        <Download className="h-3 w-3 text-[#64748B]" />
       </button>
 
       {error && (
-        <div className="flex items-center gap-1 mt-1 text-[11px] text-red-400">
+        <div className="flex items-center gap-1 mt-1 text-[11px] text-red-600">
           <AlertCircle className="h-3 w-3 shrink-0" />
           <span>{error}</span>
         </div>

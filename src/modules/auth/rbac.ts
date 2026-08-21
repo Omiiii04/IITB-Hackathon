@@ -81,3 +81,32 @@ export async function requireStoreOwnership(
 
   return { ok: true };
 }
+
+export async function getServerAuth(): Promise<AuthContext | null> {
+  try {
+    const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get('refresh_token')?.value;
+    if (refreshToken) {
+      const { verifyRefreshToken } = await import('@/modules/auth/jwt');
+      const payload = verifyRefreshToken(refreshToken);
+      const user = await prisma.user.findUnique({
+        where: { id: payload.sub },
+        select: { id: true, role: true },
+      });
+      if (user) {
+        return { userId: user.id, role: user.role };
+      }
+    }
+
+    const token = cookieStore.get('accessToken')?.value ?? cookieStore.get('token')?.value;
+    if (token) {
+      const payload = verifyAccessToken(token);
+      return { userId: payload.sub, role: payload.role };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+

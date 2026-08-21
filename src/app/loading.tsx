@@ -6,7 +6,7 @@ export default function Loading() {
         <div className="h-6 w-6 rounded-full bg-blue-500/30 animate-pulse" />
       </div>
       <div className="mt-6 flex flex-col items-center gap-2">
-        <p className="text-sm font-medium text-slate-300">Loading MarketHub</p>
+        <p className="text-sm font-medium text-slate-300">Loading FlexHub</p>
         <p className="text-xs text-slate-500">Preparing marketplace interface...</p>
       </div>
     </div>

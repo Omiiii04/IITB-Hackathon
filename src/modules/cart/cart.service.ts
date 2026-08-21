@@ -162,7 +162,7 @@ export async function validateCartStock(
       unitPrice,
       imageUrl,
       storeId: product.store?.id ?? 'unknown-store',
-      storeName: product.store?.storeName ?? 'MarketHub Seller',
+      storeName: product.store?.storeName ?? 'FlexHub Seller',
       variantTitle,
     });
   }

@@ -36,14 +36,27 @@ const PUBLIC_PRODUCT_SELECT = {
 export async function listProducts(query: ListProductsQuery) {
   const { categoryId, storeId, q, minPrice, maxPrice, sortBy, order, page, limit } = query;
 
+  const isUuid = categoryId ? /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId) : false;
+
   const where = {
     isActive: true,
-    ...(categoryId && { categoryId }),
+    ...(categoryId && (isUuid
+      ? { categoryId }
+      : {
+          OR: [
+            { categoryId },
+            { category: { slug: categoryId } },
+            { category: { name: { contains: categoryId, mode: 'insensitive' as const } } },
+          ],
+        })),
     ...(storeId && { storeId }),
     ...(q && {
       OR: [
         { title: { contains: q, mode: 'insensitive' as const } },
         { brand: { contains: q, mode: 'insensitive' as const } },
+        { description: { contains: q, mode: 'insensitive' as const } },
+        { category: { name: { contains: q, mode: 'insensitive' as const } } },
+        { category: { slug: { contains: q, mode: 'insensitive' as const } } },
       ],
     }),
     ...(minPrice !== undefined || maxPrice !== undefined

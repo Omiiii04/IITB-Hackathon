@@ -35,16 +35,16 @@ export function ProductGrid({
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="animate-pulse flex flex-col rounded-2xl border border-slate-800 bg-slate-900/40 overflow-hidden h-[340px]"
+            className="animate-pulse flex flex-col rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden h-[340px] shadow-xs"
           >
-            <div className="aspect-square w-full bg-slate-800/60" />
+            <div className="aspect-square w-full bg-[#F8FAFC]" />
             <div className="p-4 flex flex-col gap-2 flex-1">
-              <div className="h-3 w-1/3 bg-slate-800 rounded" />
-              <div className="h-4 w-5/6 bg-slate-800 rounded" />
-              <div className="h-4 w-2/3 bg-slate-800 rounded" />
+              <div className="h-3 w-1/3 bg-[#F1F5F9] rounded" />
+              <div className="h-4 w-5/6 bg-[#F1F5F9] rounded" />
+              <div className="h-4 w-2/3 bg-[#F1F5F9] rounded" />
               <div className="mt-auto flex justify-between items-center">
-                <div className="h-5 w-20 bg-slate-800 rounded" />
-                <div className="h-8 w-8 bg-slate-800 rounded-xl" />
+                <div className="h-5 w-20 bg-[#F1F5F9] rounded" />
+                <div className="h-8 w-8 bg-[#F1F5F9] rounded-xl" />
               </div>
             </div>
           </div>
@@ -56,12 +56,12 @@ export function ProductGrid({
   // Empty state
   if (!products || products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 text-center border border-dashed border-slate-800 rounded-3xl bg-slate-900/30">
-        <div className="h-12 w-12 rounded-2xl bg-slate-800 flex items-center justify-center mb-3 text-slate-500">
-          <PackageSearch className="h-6 w-6" />
+      <div className="flex flex-col items-center justify-center py-16 px-4 text-center border border-dashed border-[#E2E8F0] rounded-3xl bg-white shadow-xs">
+        <div className="h-12 w-12 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center mb-3 text-[#64748B]">
+          <PackageSearch className="h-6 w-6 text-[#94A3B8]" />
         </div>
-        <p className="text-slate-300 font-medium text-sm">{emptyMessage}</p>
-        <p className="text-slate-500 text-xs mt-1">Try adjusting your filters or search terms.</p>
+        <p className="text-[#191b23] font-bold text-sm">{emptyMessage}</p>
+        <p className="text-[#64748B] text-xs mt-1">Try adjusting your filters or search terms.</p>
       </div>
     );
   }

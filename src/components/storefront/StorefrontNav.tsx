@@ -29,15 +29,15 @@ export function StorefrontNav() {
   return (
     <nav
       aria-label="Product categories"
-      className="w-full overflow-x-auto border-t border-slate-800/60"
+      className="w-full overflow-x-auto border-t border-[#E2E8F0] bg-[#F8FAFC]/80"
     >
       <div className="mx-auto flex max-w-7xl items-center gap-1 px-4 py-1.5 sm:px-6">
         <Link
           href="/products"
-          className={`flex items-center gap-1.5 flex-shrink-0 rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
+          className={`flex items-center gap-1.5 flex-shrink-0 rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
             pathname === '/products'
-              ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-[#d8e2ff] text-[#0058be] border border-[#adc6ff]'
+              : 'text-[#475569] hover:text-[#0058be] hover:bg-white'
           }`}
         >
           <LayoutGrid className="h-3 w-3" />
@@ -51,8 +51,8 @@ export function StorefrontNav() {
               href={`/categories/${cat.slug}`}
               className={`flex-shrink-0 rounded-lg px-3 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
                 isActive
-                  ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-[#d8e2ff] text-[#0058be] border border-[#adc6ff] font-semibold'
+                  : 'text-[#475569] hover:text-[#0058be] hover:bg-white'
               }`}
             >
               {cat.name}

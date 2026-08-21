@@ -64,51 +64,65 @@ export function StoreApprovalTable() {
   };
 
   if (isLoading) {
-    return <p className="text-sm text-slate-400">Loading pending stores…</p>;
+    return (
+      <div className="py-8 text-center">
+        <p className="text-sm font-medium text-slate-500">Loading pending merchant stores…</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="text-sm text-danger-500">{error}</p>;
+    return (
+      <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+        {error}
+      </div>
+    );
   }
 
   if (stores.length === 0) {
-    return <p className="text-sm text-slate-400">No stores are waiting for approval.</p>;
+    return (
+      <div className="py-8 text-center text-slate-500">
+        <p className="text-sm">No stores are currently awaiting approval.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-800">
+    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
       <table className="w-full text-left text-sm">
-        <thead className="bg-slate-900/60">
+        <thead className="bg-slate-50 border-b border-slate-200">
           <tr>
-            <th className="px-4 py-2 font-medium text-slate-300">Store</th>
-            <th className="px-4 py-2 font-medium text-slate-300">Seller</th>
-            <th className="px-4 py-2 font-medium text-slate-300">Applied</th>
-            <th className="px-4 py-2 font-medium text-slate-300">Actions</th>
+            <th className="px-5 py-3 font-semibold text-slate-700 text-xs uppercase tracking-wider">Store Name</th>
+            <th className="px-5 py-3 font-semibold text-slate-700 text-xs uppercase tracking-wider">Merchant Email</th>
+            <th className="px-5 py-3 font-semibold text-slate-700 text-xs uppercase tracking-wider">Applied Date</th>
+            <th className="px-5 py-3 font-semibold text-slate-700 text-xs uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slate-100">
           {stores.map((store) => (
-            <tr key={store.id} className="border-t border-slate-800">
-              <td className="px-4 py-2 text-white">{store.storeName}</td>
-              <td className="px-4 py-2 text-slate-400">{store.seller.email}</td>
-              <td className="px-4 py-2 text-slate-400">
+            <tr key={store.id} className="hover:bg-slate-50/70 transition-colors">
+              <td className="px-5 py-3.5 font-medium text-slate-900">{store.storeName}</td>
+              <td className="px-5 py-3.5 font-mono text-xs text-slate-600">{store.seller.email}</td>
+              <td className="px-5 py-3.5 font-mono text-xs text-slate-500">
                 {new Date(store.createdAt).toLocaleDateString()}
               </td>
-              <td className="px-4 py-2">
-                <button
-                  onClick={() => updateStatus(store.id, 'APPROVED')}
-                  disabled={updatingId === store.id}
-                  className="mr-2 rounded bg-success-500 px-3 py-1 text-xs font-medium text-white disabled:opacity-50"
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => updateStatus(store.id, 'SUSPENDED')}
-                  disabled={updatingId === store.id}
-                  className="rounded bg-danger-500 px-3 py-1 text-xs font-medium text-white disabled:opacity-50"
-                >
-                  Reject
-                </button>
+              <td className="px-5 py-3.5">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => updateStatus(store.id, 'APPROVED')}
+                    disabled={updatingId === store.id}
+                    className="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => updateStatus(store.id, 'SUSPENDED')}
+                    disabled={updatingId === store.id}
+                    className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 disabled:opacity-50 transition-colors"
+                  >
+                    Reject
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -117,5 +131,6 @@ export function StoreApprovalTable() {
     </div>
   );
 }
+
 
 export default StoreApprovalTable;

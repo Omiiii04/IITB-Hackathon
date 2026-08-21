@@ -49,19 +49,35 @@ export class GoogleOAuthNotConfiguredError extends Error {
  * Called at the start of each OAuth operation so misconfiguration is caught
  * at runtime on the first OAuth request, not at application startup.
  */
+/** Returns true if a credential value is a placeholder / not a real value. */
+function isPlaceholder(value: string): boolean {
+  return (
+    value.startsWith('your-') ||
+    value.includes('your_') ||
+    value === 'YOUR_CLIENT_ID' ||
+    value === 'YOUR_CLIENT_SECRET' ||
+    value.toLowerCase().includes('placeholder') ||
+    value.toLowerCase().includes('example')
+  );
+}
+
 function requireGoogleCredentials(): {
   clientId: string;
   clientSecret: string;
   callbackUrl: string;
 } {
-  if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.GOOGLE_CALLBACK_URL) {
+  const clientId = env.GOOGLE_CLIENT_ID;
+  const clientSecret = env.GOOGLE_CLIENT_SECRET;
+  const callbackUrl = env.GOOGLE_CALLBACK_URL;
+
+  if (
+    !clientId || isPlaceholder(clientId) ||
+    !clientSecret || isPlaceholder(clientSecret) ||
+    !callbackUrl
+  ) {
     throw new GoogleOAuthNotConfiguredError();
   }
-  return {
-    clientId: env.GOOGLE_CLIENT_ID,
-    clientSecret: env.GOOGLE_CLIENT_SECRET,
-    callbackUrl: env.GOOGLE_CALLBACK_URL,
-  };
+  return { clientId, clientSecret, callbackUrl };
 }
 
 /** Builds the URL to send the browser to for the Google consent screen. */

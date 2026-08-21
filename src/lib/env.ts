@@ -21,9 +21,9 @@ const envSchema = z.object({
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
   // Google OAuth 2.0
-  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
-  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
-  GOOGLE_CALLBACK_URL: z.string().url().optional(),
+  GOOGLE_CLIENT_ID: z.string().transform((v) => v.trim().replace(/^["']|["']$/g, '').replace(/,$/, '')).pipe(z.string().min(1)).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().transform((v) => v.trim().replace(/^["']|["']$/g, '').replace(/,$/, '')).pipe(z.string().min(1)).optional(),
+  GOOGLE_CALLBACK_URL: z.string().transform((v) => v.trim().replace(/^["']|["']$/g, '').replace(/,$/, '')).pipe(z.string().url()).optional(),
 
   // Razorpay Gateway (primary and sole payment provider)
   RAZORPAY_KEY_ID: z.string().optional(),

@@ -1,54 +1,217 @@
 @import "tailwindcss";
 
+/* ─── Stitch Design Tokens ─────────────────────────────────────────────────── */
 @theme {
+  /* Primary - Electric Blue */
+  --color-primary: #0058be;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #2170e4;
+  --color-on-primary-container: #fefcff;
+  --color-primary-fixed: #d8e2ff;
+  --color-primary-fixed-dim: #adc6ff;
+  --color-on-primary-fixed: #001a42;
+  --color-on-primary-fixed-variant: #004395;
+  --color-inverse-primary: #adc6ff;
+
+  /* Secondary - Emerald */
+  --color-secondary: #006c49;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #6cf8bb;
+  --color-on-secondary-container: #00714d;
+  --color-secondary-fixed: #6ffbbe;
+  --color-secondary-fixed-dim: #4edea3;
+  --color-on-secondary-fixed: #002113;
+  --color-on-secondary-fixed-variant: #005236;
+
+  /* Tertiary */
+  --color-tertiary: #924700;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #b75b00;
+  --color-on-tertiary-container: #fffbff;
+  --color-tertiary-fixed: #ffdcc6;
+  --color-tertiary-fixed-dim: #ffb786;
+  --color-on-tertiary-fixed: #311400;
+  --color-on-tertiary-fixed-variant: #723600;
+
+  /* Error */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Surface */
+  --color-surface: #f9f9ff;
+  --color-surface-dim: #d8d9e3;
+  --color-surface-bright: #f9f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3fd;
+  --color-surface-container: #ecedf7;
+  --color-surface-container-high: #e6e7f2;
+  --color-surface-container-highest: #e1e2ec;
+  --color-surface-variant: #e1e2ec;
+  --color-surface-alt: #F8FAFC;
+  --color-surface-tint: #005ac2;
+
+  /* On-Surface */
+  --color-on-surface: #191b23;
+  --color-on-surface-variant: #424754;
+  --color-inverse-surface: #2e3038;
+  --color-inverse-on-surface: #eff0fa;
+
+  /* Background */
+  --color-background: #f9f9ff;
+  --color-on-background: #191b23;
+
+  /* Outline */
+  --color-outline: #727785;
+  --color-outline-variant: #c2c6d6;
+
+  /* Semantic aliases */
+  --color-text-main: #0F172A;
+  --color-text-muted: #475569;
+  --color-border-light: #E2E8F0;
+  --color-admin-purple: #8B5CF6;
+
+  /* Legacy compatibility */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
   --color-primary-500: #3b82f6;
   --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
-
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
   --color-success-500: #22c55e;
-  --color-success-700: #15803d;
-
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
   --color-warning-500: #f59e0b;
-  --color-warning-700: #b45309;
-
-  --color-danger-50: #fef2f2;
-  --color-danger-100: #fee2e2;
   --color-danger-500: #ef4444;
-  --color-danger-700: #b91c1c;
 
-
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #64748b;
-  --color-border: #e2e8f0;
-
-
-  --color-surface-light: #ffffff;
-  --color-surface-dark: #0f172a;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+/* ─── Root Variables ─────────────────────────────────────────────────────── */
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --card: #1e293b;
-  --card-foreground: #f8fafc;
-  --border: #334155;
-  --primary: #3b82f6;
+  --background: #f9f9ff;
+  --foreground: #191b23;
+  --card: #ffffff;
+  --card-foreground: #191b23;
+  --border: #E2E8F0;
+  --primary: #0058be;
   --primary-foreground: #ffffff;
 }
 
+/* ─── Stitch Animations ──────────────────────────────────────────────────── */
+
+/* Shimmer loading skeleton */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.shimmer-loading {
+  background: linear-gradient(to right, #f6f7f8 4%, #edeef1 25%, #f6f7f8 36%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Stagger card slide-up */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-stagger-card {
+  opacity: 0;
+  animation: slideUpFade 0.6s ease-out forwards;
+}
+.animate-stagger-card:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger-card:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger-card:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger-card:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger-card:nth-child(5) { animation-delay: 0.5s; }
+.animate-stagger-card:nth-child(6) { animation-delay: 0.6s; }
+.animate-stagger-card:nth-child(7) { animation-delay: 0.7s; }
+.animate-stagger-card:nth-child(8) { animation-delay: 0.8s; }
+
+/* Dashboard fade-in items */
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-item {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+.fade-in-item:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-item:nth-child(2) { animation-delay: 0.2s; }
+.fade-in-item:nth-child(3) { animation-delay: 0.3s; }
+.fade-in-item:nth-child(4) { animation-delay: 0.4s; }
+
+/* SVG line draw animation */
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+.draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 2s ease-out forwards;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Existing Utility Classes ───────────────────────────────────────────── */
+
+.arctic-card {
+  background-color: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.arctic-card:hover {
+  border-color: #0058be;
+}
+
+.arctic-sidebar-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+  border-radius: 8px;
+  transition: all 0.15s ease-in-out;
+}
+
+.arctic-sidebar-item:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+.arctic-sidebar-item.active {
+  color: #0058be;
+  background-color: #eff6ff;
+  font-weight: 600;
+}
+
+.arctic-sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 3.5px;
+  border-radius: 0 4px 4px 0;
+  background-color: #0058be;
+}
+
+/* ─── Base Layer ─────────────────────────────────────────────────────────── */
 @layer base {
   * {
     box-sizing: border-box;
@@ -56,8 +219,8 @@
   }
 
   html {
-    color-scheme: dark;
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -68,24 +231,41 @@
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
-/* Custom modern scrollbar */
+/* ─── Performance & Smoothness Utilities ─────────────────────────────────── */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.smooth-transition {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #f2f3fd;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #c2c6d6;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #727785;
 }
+

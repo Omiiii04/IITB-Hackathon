@@ -1,9 +1,7 @@
-import React from 'react';
+import { redirect } from 'next/navigation';
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <div className="w-full">{children}</div>;
+export default function AdminLayout() {
+  // Admin console is removed — redirect all traffic to home
+  redirect('/');
 }
+
