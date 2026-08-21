@@ -32,7 +32,6 @@ function LoginFormContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setInfo(null);
     setIsSubmitting(true);
 
     try {

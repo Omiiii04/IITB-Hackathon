@@ -120,7 +120,7 @@ export default async function SellerProductsPage() {
             basePrice: number;
             isActive: boolean;
             variants: { id: string }[];
-            createdAt: string;
+            createdAt?: string | Date;
           }) => (
             <div
               key={product.id}

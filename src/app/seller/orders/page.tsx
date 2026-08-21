@@ -33,12 +33,14 @@ const FALLBACK_ORDERS = [
   {
     id: 'ord-1',
     orderNumber: 'SUB-ORD-1082',
+    productTitleSnapshot: 'Nova Wireless Charger',
     subOrderStatus: 'SELLER_ACCEPTED',
     quantity: 2,
     unitPrice: 3750,
     totalPrice: 7500,
     deliveryOtp: '4829',
     createdAt: new Date().toISOString(),
+    order: { orderNumber: 'SUB-ORD-1082' },
     variant: {
       title: 'Arctic Silver',
       sku: 'NOVA-W1',
@@ -48,12 +50,14 @@ const FALLBACK_ORDERS = [
   {
     id: 'ord-2',
     orderNumber: 'SUB-ORD-1083',
+    productTitleSnapshot: 'Ergo Glide Mouse',
     subOrderStatus: 'PLACED',
     quantity: 1,
     unitPrice: 6550,
     totalPrice: 6550,
     deliveryOtp: '9103',
     createdAt: new Date(Date.now() - 3600000).toISOString(),
+    order: { orderNumber: 'SUB-ORD-1083' },
     variant: {
       title: 'Midnight Black',
       sku: 'GLIDE-M1',
@@ -129,11 +133,12 @@ export default async function SellerOrdersPage() {
           {orders.map((order: {
             id: string;
             subOrderStatus: string;
-            productTitleSnapshot: string;
+            productTitleSnapshot?: string | null;
             quantity: number;
-            totalPrice: number;
-            createdAt: string;
-            order?: { orderNumber: string };
+            totalPrice: number | null;
+            createdAt: string | Date;
+            order?: { orderNumber?: string | null } | null;
+            variant?: { product?: { title?: string | null } | null } | null;
           }) => (
             <div
               key={order.id}
@@ -148,13 +153,15 @@ export default async function SellerOrdersPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <p className="text-sm font-semibold text-white truncate">{order.productTitleSnapshot}</p>
+                  <p className="text-sm font-semibold text-white truncate">
+                    {order.productTitleSnapshot || order.variant?.product?.title || 'Order Item'}
+                  </p>
                   <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[order.subOrderStatus] ?? 'bg-slate-700 text-slate-400 border-slate-600'}`}>
                     {SUB_ORDER_STATUS_LABELS[order.subOrderStatus] ?? order.subOrderStatus}
                   </span>
                 </div>
                 <p className="text-xs text-slate-400">
-                  Qty: {order.quantity} &nbsp;·&nbsp; ₹{(order.totalPrice / 100).toLocaleString('en-IN')}
+                  Qty: {order.quantity} &nbsp;·&nbsp; ₹{(((order.totalPrice ?? 0)) / 100).toLocaleString('en-IN')}
                   {order.order?.orderNumber && ` · Order #${order.order.orderNumber}`}
                 </p>
               </div>
