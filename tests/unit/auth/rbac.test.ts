@@ -133,3 +133,12 @@ describe('RBAC Helper — Store Ownership Scoping (Security Critical)', () => {
     }
   });
 });
+
+describe('RBAC Helper — getServerAuth for Layouts & Server Components', () => {
+  it('getServerAuth returns null if cookies header has no auth token or session', async () => {
+    const { getServerAuth } = await import('@/modules/auth/rbac');
+    const auth = await getServerAuth();
+    expect(auth).toBeNull();
+  });
+});
+

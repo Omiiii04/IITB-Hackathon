@@ -13,10 +13,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateUploadSignature } from '@/lib/cloudinary';
 import { logger } from '@/lib/logger';
+import { requireRole, isAuthError } from '@/modules/auth/rbac';
 
 export async function POST(req: NextRequest) {
+  const auth = requireRole(req, ['SELLER', 'ADMIN']);
+  if (isAuthError(auth)) {
+    return auth.error;
+  }
+
   try {
     const body = (await req.json()) as { folder?: string };
+
     const folder    = body?.folder ?? 'ecommerce';
     const timestamp = Math.round(Date.now() / 1000);
     const signature = generateUploadSignature(folder, timestamp);

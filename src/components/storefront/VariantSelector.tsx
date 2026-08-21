@@ -47,7 +47,7 @@ export function VariantSelector({
 
   return (
     <div className={`flex flex-col gap-3 ${className}`}>
-      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+      <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
         Select Variant
       </span>
 
@@ -75,22 +75,22 @@ export function VariantSelector({
               type="button"
               disabled={isOos}
               onClick={() => onSelectVariant?.(variant)}
-              className={`flex items-center justify-between gap-3 rounded-2xl border p-3 text-left transition-all ${
+              className={`flex items-center justify-between gap-3 rounded-2xl border p-3 text-left transition-all cursor-pointer ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-500/10 ring-1 ring-blue-500'
+                  ? 'border-[#0058be] bg-[#d8e2ff]/20 ring-1 ring-[#0058be]'
                   : isOos
-                  ? 'border-slate-800/80 bg-slate-900/30 opacity-50 cursor-not-allowed'
-                  : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-800/60'
+                  ? 'border-[#E2E8F0] bg-[#F8FAFC] opacity-50 cursor-not-allowed'
+                  : 'border-[#E2E8F0] bg-white hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
               }`}
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 {variant.imageUrl && (
-                  <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+                  <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] bg-[#F8FAFC]">
                     <Image
                       src={variant.imageUrl}
                       alt={attrLabel}
                       fill
-                      className="object-cover"
+                      className="object-contain p-0.5 mix-blend-multiply"
                       sizes="36px"
                     />
                   </div>
@@ -98,12 +98,12 @@ export function VariantSelector({
                 <div className="flex flex-col min-w-0">
                   <span
                     className={`text-xs font-semibold truncate ${
-                      isSelected ? 'text-blue-400' : 'text-slate-200'
+                      isSelected ? 'text-[#0058be]' : 'text-[#191b23]'
                     }`}
                   >
                     {attrLabel}
                   </span>
-                  <span className="text-[11px] text-slate-400 font-medium">
+                  <span className="text-[11px] text-[#64748B] font-medium">
                     {formatPrice(variant.variantPrice)}
                   </span>
                 </div>
@@ -111,16 +111,16 @@ export function VariantSelector({
 
               <div className="flex items-center gap-1.5 flex-shrink-0">
                 {isOos ? (
-                  <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                  <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[10px] font-semibold text-[#94A3B8]">
                     OOS
                   </span>
                 ) : (
-                  <span className="text-[10px] text-slate-500">
+                  <span className="text-[10px] text-[#64748B]">
                     {variant.stock} left
                   </span>
                 )}
                 {isSelected && (
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0058be] text-white">
                     <Check className="h-3 w-3" />
                   </div>
                 )}

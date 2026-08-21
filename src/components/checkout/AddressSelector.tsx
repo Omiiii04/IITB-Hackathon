@@ -123,8 +123,8 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
   if (loading) {
     return (
       <div className={`flex items-center gap-3 py-8 justify-center ${className}`}>
-        <Loader2 className="h-5 w-5 animate-spin text-blue-400" />
-        <span className="text-sm text-slate-400">Loading your addresses&hellip;</span>
+        <Loader2 className="h-5 w-5 animate-spin text-[#0058be]" />
+        <span className="text-sm text-[#64748B]">Loading your addresses&hellip;</span>
       </div>
     );
   }
@@ -139,36 +139,36 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
             type="button"
             onClick={() => onSelect(addr)}
             className={[
-              'w-full text-left rounded-2xl border p-4 transition-all duration-200',
+              'w-full text-left rounded-2xl border p-4 transition-all duration-200 cursor-pointer',
               isSelected
-                ? 'border-blue-500 bg-blue-500/10 ring-1 ring-blue-500/40'
-                : 'border-slate-700 bg-slate-800/50 hover:border-slate-600 hover:bg-slate-800',
+                ? 'border-[#0058be] bg-[#d8e2ff]/20 ring-1 ring-[#0058be]'
+                : 'border-[#E2E8F0] bg-[#F8FAFC] hover:border-[#CBD5E1] hover:bg-white',
             ].join(' ')}
           >
             <div className="flex items-start gap-3">
               <div
                 className={[
                   'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                  isSelected ? 'border-blue-500 bg-blue-500' : 'border-slate-600',
+                  isSelected ? 'border-[#0058be] bg-[#0058be]' : 'border-[#CBD5E1]',
                 ].join(' ')}
               >
                 {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-semibold text-white">{addr.recipientName}</span>
+                  <span className="text-sm font-semibold text-[#191b23]">{addr.recipientName}</span>
                   {addr.isDefault && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/25 rounded-full px-2 py-0.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#0058be] bg-[#d8e2ff] border border-[#adc6ff] rounded-full px-2 py-0.5">
                       Default
                     </span>
                   )}
                 </div>
-                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
                   {addr.line1}
                   {addr.line2 ? `, ${addr.line2}` : ''},{' '}
                   {addr.city}, {addr.state} &mdash; {addr.postalCode}
                 </p>
-                <p className="mt-0.5 text-xs text-slate-500">{addr.phone}</p>
+                <p className="mt-0.5 text-xs text-[#94A3B8] font-medium">{addr.phone}</p>
               </div>
             </div>
           </button>
@@ -176,7 +176,7 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
       })}
 
       {error && !showForm && (
-        <p className="text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-xl px-3 py-2">
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
           {error}
         </p>
       )}
@@ -184,7 +184,7 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
       <button
         type="button"
         onClick={() => setShowForm((prev) => !prev)}
-        className="flex w-full items-center gap-2 rounded-2xl border border-dashed border-slate-600 hover:border-blue-500/60 hover:bg-blue-500/5 px-4 py-3 text-xs font-semibold text-slate-400 hover:text-blue-400 transition-all duration-200"
+        className="flex w-full items-center gap-2 rounded-2xl border border-dashed border-[#CBD5E1] hover:border-[#0058be] hover:bg-[#F8FAFC] px-4 py-3 text-xs font-semibold text-[#64748B] hover:text-[#0058be] transition-all duration-200 cursor-pointer"
       >
         <Plus className="h-4 w-4" />
         <span>Add a new address</span>
@@ -198,11 +198,11 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
       {showForm && (
         <form
           onSubmit={handleAddAddress}
-          className="rounded-2xl border border-slate-700 bg-slate-800/60 p-5 space-y-4"
+          className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 space-y-4 shadow-xs"
         >
           <div className="flex items-center gap-2 mb-1">
-            <MapPin className="h-4 w-4 text-blue-400" />
-            <span className="text-sm font-semibold text-white">New Delivery Address</span>
+            <MapPin className="h-4 w-4 text-[#0058be]" />
+            <span className="text-sm font-semibold text-[#191b23]">New Delivery Address</span>
           </div>
 
           <Field
@@ -272,7 +272,7 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
           </div>
 
           {submitError && (
-            <p className="text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2">
+            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
               {submitError}
             </p>
           )}
@@ -281,7 +281,7 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[#0058be] hover:bg-[#004395] disabled:opacity-60 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition-colors cursor-pointer shadow-sm"
             >
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
               {submitting ? 'Saving\u2026' : 'Save Address'}
@@ -289,7 +289,7 @@ export function AddressSelector({ onSelect, selectedId, className = '' }: Addres
             <button
               type="button"
               onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormErrors({}); }}
-              className="rounded-xl border border-slate-600 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors"
+              className="rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F1F5F9] px-4 py-2.5 text-sm font-medium text-[#475569] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -314,7 +314,7 @@ interface FieldProps {
 function Field({ label, id, value, onChange, error, placeholder, inputMode, maxLength }: FieldProps) {
   return (
     <div className="space-y-1">
-      <label htmlFor={id} className="block text-xs font-medium text-slate-400">
+      <label htmlFor={id} className="block text-xs font-medium text-[#475569]">
         {label}
       </label>
       <input
@@ -326,13 +326,13 @@ function Field({ label, id, value, onChange, error, placeholder, inputMode, maxL
         inputMode={inputMode}
         maxLength={maxLength}
         className={[
-          'w-full rounded-xl border bg-slate-900 px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition-colors',
+          'w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-[#191b23] placeholder-[#94A3B8] outline-none transition-colors shadow-2xs',
           error
-            ? 'border-red-500/60 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
-            : 'border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30',
+            ? 'border-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-500/30'
+            : 'border-[#E2E8F0] focus:border-[#0058be] focus:ring-1 focus:ring-[#0058be]/30',
         ].join(' ')}
       />
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   );
 }

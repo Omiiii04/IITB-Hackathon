@@ -16,9 +16,24 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        // Google product images used throughout app (product cards, cart thumbnails)
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.googleapis.com',
+      },
+      {
+        // Avatars from Google OAuth
+        protocol: 'https',
+        hostname: 'lh3.google.com',
+      },
     ],
   },
 };
+
 
 export default nextConfig;
 

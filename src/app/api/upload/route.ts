@@ -14,14 +14,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadImage } from '@/lib/cloudinary';
 import { logger } from '@/lib/logger';
+import { requireAuth, isAuthError } from '@/modules/auth/rbac';
 
 const MAX_SIZE_BYTES = 4 * 1024 * 1024; // 4 MB
 
 export async function POST(req: NextRequest) {
+  const auth = requireAuth(req);
+  if (isAuthError(auth)) {
+    return auth.error;
+  }
+
   try {
     const formData = await req.formData();
     const file   = formData.get('file') as File | null;
     const folder = (formData.get('folder') as string | null) ?? 'ecommerce';
+
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });

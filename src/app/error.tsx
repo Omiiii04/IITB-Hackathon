@@ -13,7 +13,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log error to monitoring service
-    console.error('Unhandled runtime error in MarketHub:', error);
+    console.error('Unhandled runtime error in FlexHub:', error);
   }, [error]);
 
   return (

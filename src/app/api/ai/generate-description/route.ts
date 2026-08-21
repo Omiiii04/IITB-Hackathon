@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AIService } from '@/modules/ai/ai.service';
 import { generateDescriptionSchema } from '@/modules/ai/schemas';
+import { requireRole, isAuthError } from '@/modules/auth/rbac';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,8 +14,14 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const auth = requireRole(req, ['SELLER', 'ADMIN']);
+  if (isAuthError(auth)) {
+    return auth.error;
+  }
+
   try {
     const body = await req.json().catch(() => ({}));
+
     const parseResult = generateDescriptionSchema.safeParse(body);
 
     if (!parseResult.success) {

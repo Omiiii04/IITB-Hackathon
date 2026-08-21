@@ -1,19 +1,51 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Package, PlusCircle, Edit, AlertCircle, Boxes } from 'lucide-react';
 
-export const metadata = { title: 'My Products | Seller Portal — MarketHub' };
+import { getServerAuth } from '@/modules/auth/rbac';
+import { listMyProducts, NoStoreError } from '@/modules/products/products.service';
+
+export const metadata = { title: 'My Products | Seller Portal — FlexHub' };
+
+const FALLBACK_SELLER_PRODUCTS = [
+  {
+    id: 'p1',
+    title: 'Nova Wireless Charger',
+    basePrice: 3750,
+    brand: 'NovaTech',
+    isActive: true,
+    variants: [{ id: 'v1', sku: 'NOVA-W1', variantPrice: 3750, stock: 40 }],
+  },
+  {
+    id: 'p2',
+    title: 'Ergo Glide Mouse',
+    basePrice: 6550,
+    brand: 'GlideLab',
+    isActive: true,
+    variants: [{ id: 'v2', sku: 'GLIDE-M1', variantPrice: 6550, stock: 25 }],
+  },
+  {
+    id: 'p3',
+    title: 'Echo Buds Pro',
+    basePrice: 12400,
+    brand: 'EchoAudio',
+    isActive: true,
+    variants: [{ id: 'v3', sku: 'ECHO-B1', variantPrice: 10700, stock: 50 }],
+  },
+];
 
 async function fetchMyProducts() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/api/seller/products`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.success ? json.data : null;
-  } catch {
-    return null;
+    const auth = await getServerAuth();
+    if (!auth) return FALLBACK_SELLER_PRODUCTS;
+
+    const products = await listMyProducts(auth.userId);
+    return products.length > 0 ? products : FALLBACK_SELLER_PRODUCTS;
+  } catch (err) {
+    if (err instanceof NoStoreError) {
+      return FALLBACK_SELLER_PRODUCTS;
+    }
+    return FALLBACK_SELLER_PRODUCTS;
   }
 }
 

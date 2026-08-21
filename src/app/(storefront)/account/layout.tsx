@@ -28,8 +28,8 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-extrabold text-white sm:text-3xl">My Account</h1>
-        <p className="mt-1 text-xs text-slate-400">
+        <h1 className="text-2xl font-extrabold text-[#191b23] sm:text-3xl">My Account</h1>
+        <p className="mt-1 text-xs text-[#64748B]">
           Manage your saved addresses, track recent orders, and update preferences.
         </p>
       </div>
@@ -37,14 +37,14 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         {/* Sidebar navigation */}
         <aside className="lg:col-span-3">
-          <nav className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 backdrop-blur-sm space-y-1">
-            <div className="flex items-center gap-3 px-3 py-3 border-b border-slate-800/80 mb-2">
-              <div className="h-10 w-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+          <nav className="rounded-3xl border border-[#E2E8F0] bg-white p-4 shadow-sm space-y-1">
+            <div className="flex items-center gap-3 px-3 py-3 border-b border-[#E2E8F0] mb-2">
+              <div className="h-10 w-10 rounded-2xl bg-[#d8e2ff] border border-[#adc6ff] flex items-center justify-center text-[#0058be]">
                 <User className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-white truncate">Customer Account</p>
-                <p className="text-[11px] text-slate-400 truncate">Manage Account & Orders</p>
+                <p className="text-sm font-bold text-[#191b23] truncate">Customer Account</p>
+                <p className="text-[11px] text-[#64748B] truncate">Manage Account & Orders</p>
               </div>
             </div>
 
@@ -58,19 +58,19 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
                   className={[
                     'flex items-center gap-3 rounded-2xl px-4 py-3 text-xs font-semibold transition-all duration-200',
                     isActive
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
-                      : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200',
+                      ? 'bg-[#0058be] text-white shadow-sm'
+                      : 'text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#191b23]',
                   ].join(' ')}
                 >
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-[#64748B]'}`} />
                   <span>{item.name}</span>
                 </Link>
               );
             })}
 
-            <div className="pt-4 mt-4 border-t border-slate-800/80 px-3">
-              <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+            <div className="pt-4 mt-4 border-t border-[#E2E8F0] px-3">
+              <div className="flex items-center gap-2 text-[11px] text-[#64748B]">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                 <span>Encrypted Account Portal</span>
               </div>
             </div>

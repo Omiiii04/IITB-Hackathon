@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
-import { Search, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { StorefrontNav } from '@/components/storefront/StorefrontNav';
-import { CartDrawer } from '@/components/cart/CartDrawer';
 import { CartNavButton } from '@/components/cart/CartNavButton';
+import { SearchBar } from '@/components/storefront/SearchBar';
+import { StorefrontUserNav } from '@/components/storefront/StorefrontUserNav';
 
 export default function StorefrontLayout({
   children,
@@ -11,52 +12,35 @@ export default function StorefrontLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#f9f9ff] text-[#191b23] flex flex-col selection:bg-[#d8e2ff] selection:text-[#001a42]">
       {/* Storefront Navbar */}
-      <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-[#0f172a]/90 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0058be] to-blue-500 text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
               <Zap className="h-4 w-4" />
             </div>
-            <span className="text-lg font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors hidden sm:block">
-              Market<span className="text-blue-400">Hub</span>
+            <span className="text-lg font-bold tracking-tight text-[#191b23] group-hover:text-[#0058be] transition-colors hidden sm:block">
+              Flex<span className="text-[#0058be]">Hub</span>
             </span>
           </Link>
 
-          {/* Search bar */}
-          <form
-            action="/products"
-            method="GET"
-            className="flex-1 max-w-xl"
-          >
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
-              <input
-                type="text"
-                name="q"
-                placeholder="Search products..."
-                className="w-full rounded-xl border border-slate-700 bg-slate-800/60 pl-9 pr-4 py-2 text-sm text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
-              />
+          {/* Search bar — client component that syncs with URL params */}
+          <Suspense fallback={
+            <div className="flex-1 max-w-xl">
+              <div className="relative">
+                <div className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] h-9 animate-pulse" />
+              </div>
             </div>
-          </form>
+          }>
+            <SearchBar />
+          </Suspense>
 
-          {/* Right nav */}
+          {/* Right nav with live Customer Auth & Cart */}
           <nav className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <CartNavButton />
-            <Link
-              href="/login"
-              className="hidden sm:block rounded-lg px-3 py-1.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-md shadow-blue-600/25 hover:bg-blue-500 transition-all"
-            >
-              Get Started
-            </Link>
+            <StorefrontUserNav />
           </nav>
         </div>
 
@@ -64,29 +48,69 @@ export default function StorefrontLayout({
         <StorefrontNav />
       </header>
 
-      {/* Slide-over cart drawer */}
-      <CartDrawer />
-
       {/* Page content */}
       <main className="flex-1 w-full">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 bg-slate-950/60 py-10 mt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white">
-                <Zap className="h-4 w-4" />
+      <footer className="border-t border-[#E2E8F0] bg-white mt-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+
+            {/* Brand */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-[#0058be] to-blue-500 text-white">
+                  <Zap className="h-4 w-4" />
+                </div>
+                <span className="font-bold text-[#191b23] text-base">Flex<span className="text-[#0058be]">Hub</span></span>
               </div>
-              <span className="font-bold text-white">MarketHub</span>
-              <span className="text-xs text-slate-500">© {new Date().getFullYear()}</span>
+              <p className="text-xs text-[#64748B] leading-relaxed max-w-[200px]">
+                Your one-stop marketplace for quality products and trusted sellers.
+              </p>
             </div>
-            <div className="flex items-center gap-6 text-xs text-slate-500">
-              <Link href="/products" className="hover:text-slate-300 transition-colors">All Products</Link>
-              <Link href="/seller-register" className="hover:text-slate-300 transition-colors">Become a Seller</Link>
-              <Link href="/api/health" className="hover:text-slate-300 transition-colors">API Health</Link>
+
+            {/* Shop */}
+            <div className="flex flex-col gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-[#191b23]">Shop</h4>
+              <nav className="flex flex-col gap-2 text-xs text-[#64748B]">
+                <Link href="/products" className="hover:text-[#0058be] transition-colors">All Products</Link>
+                <Link href="/cart" className="hover:text-[#0058be] transition-colors">My Cart</Link>
+                <Link href="/checkout" className="hover:text-[#0058be] transition-colors">Checkout</Link>
+              </nav>
+            </div>
+
+            {/* Account */}
+            <div className="flex flex-col gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-[#191b23]">Account</h4>
+              <nav className="flex flex-col gap-2 text-xs text-[#64748B]">
+                <Link href="/login" className="hover:text-[#0058be] transition-colors">Sign In</Link>
+                <Link href="/register" className="hover:text-[#0058be] transition-colors">Create Account</Link>
+                <Link href="/account/orders" className="hover:text-[#0058be] transition-colors">My Orders</Link>
+                <Link href="/account/addresses" className="hover:text-[#0058be] transition-colors">My Addresses</Link>
+              </nav>
+            </div>
+
+            {/* Sellers */}
+            <div className="flex flex-col gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-[#191b23]">Sellers</h4>
+              <nav className="flex flex-col gap-2 text-xs text-[#64748B]">
+                <Link href="/seller-register" className="hover:text-[#0058be] transition-colors">Become a Seller</Link>
+                <Link href="/seller/dashboard" className="hover:text-[#0058be] transition-colors">Seller Dashboard</Link>
+                <Link href="/seller/products" className="hover:text-[#0058be] transition-colors">Manage Products</Link>
+                <Link href="/seller/orders" className="hover:text-[#0058be] transition-colors">Manage Orders</Link>
+              </nav>
+            </div>
+
+          </div>
+
+          {/* Bottom bar */}
+          <div className="mt-10 border-t border-[#E2E8F0] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#94A3B8]">
+            <span>© {new Date().getFullYear()} FlexHub. All rights reserved.</span>
+            <div className="flex items-center gap-4">
+              <Link href="/login" className="hover:text-[#0058be] transition-colors">Privacy Policy</Link>
+              <Link href="/login" className="hover:text-[#0058be] transition-colors">Terms of Service</Link>
             </div>
           </div>
         </div>
@@ -94,3 +118,4 @@ export default function StorefrontLayout({
     </div>
   );
 }
+

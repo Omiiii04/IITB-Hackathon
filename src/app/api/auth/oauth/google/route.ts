@@ -28,21 +28,18 @@ import {
 import { findOrCreateGoogleUser } from '@/modules/auth/auth.service';
 import { prisma } from '@/lib/prisma';
 import { signRefreshToken, REFRESH_COOKIE_NAME, refreshCookieOptions, getRefreshTokenExpiry } from '@/modules/auth/jwt';
-import type { ApiResponse } from '@/types';
 
 const STATE_COOKIE_NAME = 'google_oauth_state';
+const REDIRECT_COOKIE_NAME = 'google_oauth_redirect';
 const STATE_COOKIE_MAX_AGE_SECONDS = 300; // 5 min — long enough for the round trip
 
 // Use path '/' so the browser reliably sends the cookie on the callback URL
-// (which has the same pathname but with ?code=&state= query parameters).
-// A narrow path like '/api/auth/oauth/google' caused state mismatches because
-// some browsers don't send cookies when the path matches but query parameters
-// are appended (behaviour varies between browser implementations).
 const STATE_COOKIE_PATH = '/';
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   const consentError = request.nextUrl.searchParams.get('error');
+  const redirectParam = request.nextUrl.searchParams.get('redirect');
 
   if (consentError) {
     logger.warn('Google OAuth consent denied or errored', { consentError });
@@ -66,14 +63,21 @@ export async function GET(request: NextRequest) {
         maxAge: STATE_COOKIE_MAX_AGE_SECONDS,
       });
 
+      if (redirectParam) {
+        response.cookies.set(REDIRECT_COOKIE_NAME, redirectParam, {
+          httpOnly: true,
+          secure: env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: STATE_COOKIE_PATH,
+          maxAge: STATE_COOKIE_MAX_AGE_SECONDS,
+        });
+      }
+
       return response;
     } catch (err) {
       if (err instanceof GoogleOAuthNotConfiguredError) {
-        logger.error('Google OAuth is not configured — missing environment variables');
-        return NextResponse.json<ApiResponse>(
-          { success: false, error: 'Google sign-in is not available in this environment' },
-          { status: 503 },
-        );
+        logger.warn('Google OAuth is not configured in this environment');
+        return NextResponse.redirect(new URL('/login?error=oauth_not_configured', env.NEXT_PUBLIC_APP_URL));
       }
       throw err;
     }
@@ -83,6 +87,7 @@ export async function GET(request: NextRequest) {
   // fetch profile, create/link the account.
   const returnedState = request.nextUrl.searchParams.get('state');
   const expectedState = request.cookies.get(STATE_COOKIE_NAME)?.value;
+  const savedRedirect = request.cookies.get(REDIRECT_COOKIE_NAME)?.value;
 
   if (!expectedState || returnedState !== expectedState) {
     logger.warn('Google OAuth state mismatch — possible CSRF attempt');
@@ -105,12 +110,20 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    const destination = savedRedirect && savedRedirect.startsWith('/') ? savedRedirect : '/products';
     const refreshToken = signRefreshToken(user.id, session.id);
-    const response = NextResponse.redirect(new URL('/', env.NEXT_PUBLIC_APP_URL));
+    const response = NextResponse.redirect(new URL(destination, env.NEXT_PUBLIC_APP_URL));
     response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, refreshCookieOptions());
-    // Delete state cookie using the same path it was set on, so browsers
-    // that scope cookies by path correctly remove it.
+    
+    // Clean up temporary auth cookies
     response.cookies.set(STATE_COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: STATE_COOKIE_PATH,
+      maxAge: 0,
+    });
+    response.cookies.set(REDIRECT_COOKIE_NAME, '', {
       httpOnly: true,
       secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -124,6 +137,13 @@ export async function GET(request: NextRequest) {
       new URL('/login?error=oauth_failed', env.NEXT_PUBLIC_APP_URL),
     );
     response.cookies.set(STATE_COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: STATE_COOKIE_PATH,
+      maxAge: 0,
+    });
+    response.cookies.set(REDIRECT_COOKIE_NAME, '', {
       httpOnly: true,
       secure: env.NODE_ENV === 'production',
       sameSite: 'lax',

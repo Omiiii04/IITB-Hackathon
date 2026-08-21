@@ -20,20 +20,42 @@ function LoginFormContent() {
     const oauthError = searchParams.get('error');
     if (oauthError === 'oauth_denied') {
       setError('Google sign-in was canceled.');
-    } else if (oauthError === 'oauth_state_mismatch' || oauthError === 'oauth_failed') {
-      setError('Google sign-in failed. Please try again.');
+    } else if (oauthError === 'oauth_state_mismatch') {
+      setError('Google sign-in failed: state mismatch (possible CSRF). Please try again.');
+    } else if (oauthError === 'oauth_not_configured') {
+      setError('Google OAuth is not configured in this environment. Please sign in with email/password.');
+    } else if (oauthError === 'oauth_failed') {
+      setError('Google sign-in failed. Please try again or use email login below.');
     }
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setInfo(null);
     setIsSubmitting(true);
 
     try {
       await login(email, password);
-      const redirectTo = searchParams.get('redirect') || '/';
-      router.push(redirectTo);
+      // Role-aware redirect: use ?redirect param, else default by role
+      const redirectTo = searchParams.get('redirect');
+      if (redirectTo) {
+        router.push(redirectTo);
+        return;
+      }
+      // Fetch user role from refresh endpoint to determine where to go
+      const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
+      if (res.ok) {
+        const body = await res.json();
+        const role = body?.data?.user?.role;
+        if (role === 'SELLER') {
+          router.push('/seller/dashboard');
+        } else {
+          router.push('/products');
+        }
+      } else {
+        router.push('/products');
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -45,28 +67,32 @@ function LoginFormContent() {
     }
   };
 
+
   return (
-    <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-md">
-      <div className="mb-6 text-center">
-        <h1 className="text-2xl font-bold text-white tracking-tight">Welcome Back</h1>
-        <p className="mt-1 text-sm text-slate-400">Sign in to your MarketHub account</p>
+    <div className="w-full rounded-3xl border border-[#E2E8F0] bg-white p-8 sm:p-10 shadow-sm">
+      <div className="mb-8 text-center">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#191b23] tracking-tight">Welcome Back</h1>
+        <p className="mt-1.5 text-sm text-[#64748B]">Sign in to your FlexHub account</p>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400 flex items-center gap-2">
-          <svg className="w-5 h-5 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-600 flex items-start gap-2.5">
+          <svg className="w-5 h-5 flex-shrink-0 text-red-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span>{error}</span>
+          <span className="font-medium">{error}</span>
         </div>
       )}
 
+
+
       {/* Google OAuth Button */}
       <a
-        href="/api/auth/oauth/google"
-        className="w-full py-2.5 px-4 rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-200 text-sm font-medium flex items-center justify-center gap-3 transition-colors mb-6 shadow-sm"
+        href={`/api/auth/oauth/google?redirect=${encodeURIComponent(searchParams.get('redirect') || '/products')}`}
+        id="google-oauth-btn"
+        className="w-full py-3 px-4 rounded-2xl border border-[#CBD5E1] bg-white hover:bg-[#F8FAFC] text-[#1E293B] text-sm font-semibold flex items-center justify-center gap-3 transition-all mb-6 shadow-2xs hover:shadow-xs"
       >
-        <svg className="w-4 h-4" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path
             fill="#4285F4"
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -89,16 +115,16 @@ function LoginFormContent() {
 
       <div className="relative mb-6 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-800" />
+          <div className="w-full border-t border-[#E2E8F0]" />
         </div>
-        <span className="relative bg-slate-900 px-3 text-xs uppercase tracking-wider text-slate-500">
+        <span className="relative bg-white px-3 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
           Or sign in with email
         </span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-slate-300 mb-1.5" htmlFor="email">
+          <label className="block text-xs font-bold text-[#191b23] mb-1.5" htmlFor="email">
             Email Address
           </label>
           <input
@@ -108,13 +134,13 @@ function LoginFormContent() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+            className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2.5 text-sm text-[#191b23] placeholder-[#94A3B8] focus:border-[#0058be] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0058be]/20 transition-colors"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-medium text-slate-300" htmlFor="password">
+            <label className="block text-xs font-bold text-[#191b23]" htmlFor="password">
               Password
             </label>
           </div>
@@ -125,14 +151,15 @@ function LoginFormContent() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••••••"
-            className="w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
+            className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2.5 text-sm text-[#191b23] placeholder-[#94A3B8] focus:border-[#0058be] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0058be]/20 transition-colors"
           />
         </div>
 
         <button
           type="submit"
+          id="login-submit-btn"
           disabled={isSubmitting}
-          className="w-full mt-2 rounded-xl bg-blue-600 hover:bg-blue-500 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full mt-2 rounded-xl bg-[#0058be] hover:bg-[#004395] py-3 text-sm font-semibold text-white shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>
@@ -145,16 +172,16 @@ function LoginFormContent() {
         </button>
       </form>
 
-      <div className="mt-6 border-t border-slate-800/80 pt-4 text-center space-y-2">
-        <p className="text-xs text-slate-400">
+      <div className="mt-8 border-t border-[#E2E8F0] pt-5 text-center space-y-2">
+        <p className="text-xs text-[#64748B]">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="font-semibold text-blue-400 hover:underline">
+          <Link href="/register" className="font-bold text-[#0058be] hover:underline">
             Register as Customer
           </Link>
         </p>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-[#64748B]">
           Want to sell products?{' '}
-          <Link href="/seller-register" className="font-semibold text-indigo-400 hover:underline">
+          <Link href="/seller-register" className="font-bold text-indigo-600 hover:underline">
             Register as Seller
           </Link>
         </p>
@@ -166,7 +193,7 @@ function LoginFormContent() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="w-full rounded-2xl border border-slate-800 bg-slate-900/80 p-8 text-center text-slate-400">
+      <div className="w-full rounded-3xl border border-[#E2E8F0] bg-white p-8 text-center text-[#64748B]">
         Loading...
       </div>
     }>
@@ -174,4 +201,3 @@ export default function LoginPage() {
     </Suspense>
   );
 }
-
