@@ -6,7 +6,7 @@
 
 ---
 
-## 🌐 Live Production Deployment
+## 🌐 Live Production Deployment (suspended)
 
 - **Live Application URL**: [https://iitb.omiiii.me](https://iitb.omiiii.me)
 - **API Diagnostics & Health Check**: [https://iitb.omiiii.me/api/health](https://iitb.omiiii.me/api/health)
