@@ -1,138 +1,143 @@
-# MarketHub — Smart Multi-Vendor E-Commerce Platform
-> **Problem Statement 3**: Multi-Vendor E-Commerce & Inventory Management Platform with Atomic Stock Reservation, Split Order Architecture, and Cryptographic OTP Delivery Handshake.
+# MarketHub
 
-[![CI Pipeline](https://github.com/Omiiii04/IITB-Hackathon/actions/workflows/ci.yml/badge.svg)](https://github.com/Omiiii04/IITB-Hackathon/actions)
-[![CD Pipeline](https://github.com/Omiiii04/IITB-Hackathon/actions/workflows/cd.yml/badge.svg)](https://github.com/Omiiii04/IITB-Hackathon/actions)
+**Multi-vendor e-commerce & inventory management platform** with atomic stock reservation, split-order fulfillment, and a cryptographic OTP delivery handshake.
 
----
+[![CI](https://github.com/Omiiii04/IITB-Hackathon/actions/workflows/ci.yml/badge.svg)](https://github.com/Omiiii04/IITB-Hackathon/actions)
+[![CD](https://github.com/Omiiii04/IITB-Hackathon/actions/workflows/cd.yml/badge.svg)](https://github.com/Omiiii04/IITB-Hackathon/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 🌐 Live Production Deployment (suspended)
 
-- **Live Application URL**: [https://iitb.omiiii.me](https://iitb.omiiii.me)
-- **API Diagnostics & Health Check**: [https://iitb.omiiii.me/api/health](https://iitb.omiiii.me/api/health)
+Originally built for IIT Bombay's hackathon (Problem Statement 3: Multi-Vendor E-Commerce & Inventory Management).
 
----
+## Contents
 
-## 🔑 Demo Accounts & Credentials Cheat-Sheet
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Testing](#testing)
+- [Demo](#demo)
+- [Project Structure](#project-structure)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-All demo accounts are pre-seeded in PostgreSQL with Argon2id encrypted passwords:  
-**Standard Password for All Accounts:** `Password123!`
+## Overview
 
-| Role | Email | Password | Primary Scope / Capabilities |
-| :--- | :--- | :--- | :--- |
-| 🛡️ **Platform Admin** | `admin@markethub.com` | `Password123!` | Store approvals, category tree taxonomy, user management & GMV metrics |
-| 🏬 **Seller 1 (Aura Apparel)** | `seller1@markethub.com` | `Password123!` | Approved store, streetwear apparel, variant matrix editor, coupons & order fulfillment |
-| ⚡ **Seller 2 (TechNova)** | `seller2@markethub.com` | `Password123!` | Approved store, electronics & audio gear, CSV bulk inventory upload |
-| 🌿 **Seller 3 (GreenLeaf)** | `seller3@markethub.com` | `Password123!` | Pending store approval (demonstrates Admin approval governance) |
-| 🛒 **Customer** | `customer@markethub.com` | `Password123!` | Multi-vendor cart, saved addresses, Razorpay checkout & split order tracking |
-| 🚚 **Delivery Agent** | `delivery@markethub.com` | `Password123!` | OTP delivery handshake verification |
+MarketHub is a full-stack, multi-tenant marketplace. Independent vendors sell through their own storefronts while sharing one customer-facing catalog, cart, and checkout. A single customer payment splits atomically into per-vendor sub-orders, each tracked through its own fulfillment pipeline.
 
----
+## Features
 
-## 🚀 Key Architectural Highlights
+- **Atomic stock reservation** — transactional `stock - reserved >= requested` checks with a 15-minute reservation TTL, preventing overselling under concurrent checkout.
+- **Split multi-vendor orders** — one payment fractures into vendor-isolated sub-orders, each independently accepted, packed, and shipped.
+- **Cryptographic OTP delivery handshake** — a per-sub-order OTP verifies physical handoff before an order is marked complete.
+- **Idempotent payments** — timing-safe HMAC-SHA256 Razorpay webhook verification with event-level locking against duplicate processing.
+- **AI-assisted listings** — Gemini 2.0 Flash generates SEO-aware product descriptions from a title.
+- **Role-based portals** — storefront, seller, and admin experiences, with store-approval governance and category taxonomy management.
+
+## Architecture
 
 ```mermaid
 flowchart TD
-    Customer[Customer Browses Multi-Vendor Catalog] --> Cart[Multi-Vendor Cart Grouped by Store]
-    Cart --> Checkout[Checkout API & Atomic Stock Reservation 15-min TTL]
-    Checkout --> Razorpay[Razorpay Payment Order Initialization]
-    Razorpay --> Webhook[Webhook HMAC Verification & Idempotency Lock]
-    Webhook --> SubOrders[Split Sub-Orders per Vendor Store]
-    SubOrders --> Fulfillment[Seller Fulfillment Pipeline: Accept -> Pack -> Ship]
-    Fulfillment --> OTP[6-Digit Cryptographic OTP Customer Handshake]
-    OTP --> Complete[Order Marked COMPLETED & Physical Inventory Committed]
+    A[Customer browses catalog] --> B[Cart grouped by vendor]
+    B --> C[Checkout: atomic stock reservation, 15-min TTL]
+    C --> D[Razorpay payment]
+    D --> E[Webhook: HMAC verify + idempotency lock]
+    E --> F[Split into per-vendor sub-orders]
+    F --> G[Seller fulfillment: accept -> pack -> ship]
+    G --> H[OTP delivery handshake]
+    H --> I[Order completed, inventory committed]
 ```
 
-1. **Atomic Stock Reservation Engine**:
-   - Verifies `(stock - reservedStock >= requestedQuantity)` within isolated database transactions.
-   - Holds stock during checkout with an automatic 15-minute expiration window to prevent overselling and inventory lockouts.
-2. **Multi-Vendor Cart & Sub-Order Splitting**:
-   - Single customer payment automatically fractures into vendor-isolated sub-orders.
-   - Each vendor independently accepts, packs, ships, and tracks their items.
-3. **Cryptographic OTP Delivery Handshake**:
-   - A unique 6-digit OTP is generated per sub-order upon transition to `OUT_FOR_DELIVERY`.
-   - The seller/courier must verify the customer's OTP to finalize delivery.
-4. **Idempotent Razorpay Payment Pipeline**:
-   - Timing-safe HMAC-SHA256 signature verification (`crypto.timingSafeEqual`).
-   - `ProcessedEvent` table locking guarantees webhook retries never duplicate transactions.
-5. **Google Gemini 2.0 Flash AI Integration**:
-   - Context-aware marketing copy and SEO description generator for sellers with customizable voice and tone settings.
-6. **Enterprise Design System**:
-   - Built on Tailwind CSS v4, dark glassmorphism, responsive data charts, and zero placeholder content.
+## Tech Stack
 
----
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS v4 |
+| Database | PostgreSQL + Prisma 6 |
+| Auth | JWT (access/refresh) + Google OAuth 2.0, Argon2id password hashing |
+| Payments | Razorpay |
+| Storage | Cloudinary |
+| AI | Google Gemini 2.0 Flash |
+| Testing | Vitest (unit/integration), Playwright (e2e) |
+| Infra | Docker, Railway |
 
-## 🎯 Step-by-Step Judging Demo Walkthrough
+## Getting Started
 
-### Flow 1: Customer Multi-Vendor Checkout & Payment
-1. Open [https://iitb.omiiii.me](https://iitb.omiiii.me).
-2. Log in as `customer@markethub.com` / `Password123!`.
-3. Add items from **Aura Apparel** (Hoodie) and **TechNova** (Headphones) to your cart.
-4. Open the Cart Drawer to see items automatically grouped by store.
-5. Proceed to Checkout, apply coupon `WELCOME10`, select the saved Mumbai address, and click **Pay with Razorpay**.
-
-### Flow 2: Seller Order Fulfillment & OTP Handshake
-1. Log in as `seller1@markethub.com` / `Password123!`.
-2. Navigate to **Seller Portal → Orders** (`/seller/orders`).
-3. Advance the order: **Accept Order** → **Mark Packed** → **Mark Shipped** → **Mark Out for Delivery**.
-4. When out for delivery, click **Confirm Delivery (OTP)** and enter the customer's 6-digit delivery OTP code (`492019`) to complete fulfillment.
-
-### Flow 3: AI Product Description Generator
-1. In Seller Portal, go to **Products → Add Product** (`/seller/products/new`).
-2. Type a title (e.g., *"Ultra-Comfort Bamboo Fiber Lounge Pants"*).
-3. Click **Generate Description with AI** to invoke Gemini 2.0 Flash and apply the generated copy directly.
-
-### Flow 4: Admin Store Governance & Category Management
-1. Log in as `admin@markethub.com` / `Password123!`.
-2. Go to **Admin Console → Store Approvals** (`/admin/stores`) to review and approve **GreenLeaf Organics**.
-3. Go to **Category Taxonomy** (`/admin/categories`) to manage root and sub-category hierarchies.
-4. View platform GMV and revenue metrics in **Admin Analytics** (`/admin/dashboard`).
-
----
-
-## 🛠️ Local Development & Quick Start
-
-### 1. Prerequisites
-- Node.js >= 20.x
+### Prerequisites
+- Node.js ≥ 20
 - Docker & Docker Compose
 
-### 2. Setup
+### Setup
 ```bash
 git clone https://github.com/Omiiii04/IITB-Hackathon.git
 cd IITB-Hackathon
 npm ci
 cp .env.example .env
 ```
+Fill in `.env` — see `.env.example` for the full list (database, JWT secrets, Google OAuth, Razorpay, Cloudinary, Gemini).
 
-### 3. Database Seeding & Development
+### Run
 ```bash
-# Generate Prisma client
+npm run docker:db   # start Postgres
 npx prisma generate
-
-# Seed demo catalog, accounts, and historical orders
-npm run db:seed
-
-# Run local dev server
+npm run db:seed     # demo catalog, accounts, orders
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000). Or run the full stack in Docker: `npm run docker:up`.
 
----
-
-## 🧪 Testing & Quality Assurance
+## Testing
 
 ```bash
-# Run all 137 unit & integration tests
-npm test
-
-# Run strict TypeScript type verification
-npx tsc --noEmit
-
-# Run production build verification
-npm run build
+npm test          # unit + integration (Vitest)
+npm run test:e2e  # end-to-end (Playwright)
+npx tsc --noEmit  # type check
+npm run build     # production build
 ```
 
----
+## Demo
 
-## 📜 License
-MIT License — Copyright (c) 2026 Om Apar & Team.
+<details>
+<summary>Seeded accounts (password: <code>Password123!</code> for all)</summary>
+
+| Role | Email | Notes |
+|---|---|---|
+| Admin | `admin@markethub.com` | Store approvals, category taxonomy, platform analytics |
+| Seller — Aura Apparel | `seller1@markethub.com` | Approved store, variant matrix, coupons |
+| Seller — TechNova | `seller2@markethub.com` | Approved store, CSV bulk inventory upload |
+| Seller — GreenLeaf | `seller3@markethub.com` | Pending approval (demonstrates admin governance) |
+| Customer | `customer@markethub.com` | Multi-vendor cart, Razorpay checkout |
+| Delivery agent | `delivery@markethub.com` | OTP delivery handshake |
+
+</details>
+
+A live deployment was previously hosted at `iitb.omiiii.me`; it's currently suspended — run locally via the steps above.
+
+## Project Structure
+
+```
+src/
+├── app/          # Next.js routes (storefront, seller, admin, auth, API)
+├── modules/      # Domain logic: cart, checkout, orders, payments, inventory, ai, ...
+├── components/   # Shared UI components
+├── lib/          # Cross-cutting utilities (db, auth, validation)
+├── hooks/        # React hooks
+└── types/        # Shared TypeScript types
+
+prisma/           # Schema, migrations, seed script
+tests/            # Unit, integration, and e2e tests
+```
+
+## Deployment
+
+Containerized via `Dockerfile` / `docker-compose.yml`. `railway.json` configures a Railway deployment (Dockerfile build, health check at `/api/health`).
+
+## Contributing
+
+Issues and PRs are welcome. Fork the repo, create a branch, and open a PR — run `npm test` and `npx tsc --noEmit` before submitting.
+
+## License
+
+[MIT](LICENSE) © 2026 Om Apar
